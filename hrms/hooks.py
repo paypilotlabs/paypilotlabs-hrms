@@ -172,6 +172,9 @@ doc_events = {
 		],
 		"on_trash": "hrms.overrides.company.handle_linked_docs",
 	},
+	"ToDo": {
+		"on_update": "hrms.controllers.employee_boarding_controller.update_boarding_status_from_todo",
+	},
 	"Holiday List": {
 		"on_update": "hrms.utils.holiday_list.invalidate_cache",
 		"on_trash": "hrms.utils.holiday_list.invalidate_cache",

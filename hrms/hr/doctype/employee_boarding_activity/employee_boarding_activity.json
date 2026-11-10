@@ -14,7 +14,8 @@
   "task_weight",
   "required_for_employee_creation",
   "section_break_6",
-  "description"
+  "description",
+  "todo"
  ],
  "fields": [
   {
@@ -84,11 +85,21 @@
    "in_list_view": 1,
    "label": "Begin On (Days)",
    "non_negative": 1
+  },
+  {
+   "columns": 2,
+   "fieldname": "todo",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "ToDo",
+   "no_copy": 1,
+   "options": "ToDo",
+   "read_only": 1
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2026-08-06 13:01:43.187327",
+ "modified": "2026-11-10 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Boarding Activity",

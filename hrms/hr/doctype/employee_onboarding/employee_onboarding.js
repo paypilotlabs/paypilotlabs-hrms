@@ -23,18 +23,14 @@ frappe.ui.form.on("Employee Onboarding", {
 				__("View"),
 			);
 		}
-		if (frm.doc.project) {
+		if (frm.doc.docstatus === 1) {
 			frm.add_custom_button(
-				__("Project"),
+				__("ToDos"),
 				function () {
-					frappe.set_route("Form", "Project", frm.doc.project);
-				},
-				__("View"),
-			);
-			frm.add_custom_button(
-				__("Task"),
-				function () {
-					frappe.set_route("List", "Task", { project: frm.doc.project });
+					frappe.set_route("List", "ToDo", {
+						reference_type: frm.doc.doctype,
+						reference_name: frm.doc.name,
+					});
 				},
 				__("View"),
 			);

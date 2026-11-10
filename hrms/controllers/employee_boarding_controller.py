@@ -3,9 +3,8 @@
 
 import frappe
 from frappe import _
-from frappe.desk.form import assign_to
 from frappe.model.document import Document
-from frappe.utils import add_days, flt, unique
+from frappe.utils import add_days, unique
 
 from hrms.hr.doctype.employee.employee import get_holiday_list_for_employee
 from hrms.hr.doctype.holiday_list.holiday_list import is_holiday
@@ -13,66 +12,30 @@ from hrms.hr.doctype.holiday_list.holiday_list import is_holiday
 
 class EmployeeBoardingController(Document):
 	"""
-	Create the project and the task for the boarding process
-	Assign to the concerned person and roles as per the onboarding/separation template
+	Create one ToDo per activity for the boarding process (PayPilotLabs People has no Projects or Tasks)
+	and assign it to the people and roles set in the onboarding/separation template.
 	"""
 
 	def validate(self):
-		# remove the task if linked before submitting the form
+		# drop ToDo links copied from an amended document
 		if self.amended_from:
 			for activity in self.activities:
-				activity.task = ""
+				activity.todo = ""
 
 	def on_submit(self):
-		# create the project for the given employee onboarding
-		project_name = _(self.doctype) + " : "
-		if self.doctype == "Employee Onboarding":
-			project_name += self.job_applicant or self.employee_name
-		else:
-			project_name += self.employee
-
-		project = frappe.get_doc(
-			{
-				"doctype": "Project",
-				"project_name": project_name,
-				"expected_start_date": self.date_of_joining
-				if self.doctype == "Employee Onboarding"
-				else self.resignation_letter_date,
-				"department": self.department,
-				"company": self.company,
-			}
-		).insert(ignore_permissions=True, ignore_mandatory=True)
-
-		self.db_set("project", project.name)
 		self.db_set("boarding_status", "Pending")
 		self.reload()
 		self.create_task_and_notify_user()
 
 	def create_task_and_notify_user(self):
-		# create the task for the given project and assign to the concerned person
+		"""Create a ToDo for each activity and assign it to the concerned users."""
 		holiday_list = self.get_holiday_list()
 
 		for activity in self.activities:
-			if activity.task:
+			if activity.todo:
 				continue
 
 			dates = self.get_task_dates(activity, holiday_list)
-
-			task = frappe.get_doc(
-				{
-					"doctype": "Task",
-					"project": self.project,
-					"subject": activity.activity_name + " : " + self.employee_name,
-					"description": activity.description,
-					"department": self.department,
-					"company": self.company,
-					"task_weight": activity.task_weight,
-					"exp_start_date": dates[0],
-					"exp_end_date": dates[1],
-				}
-			).insert(ignore_permissions=True)
-			activity.db_set("task", task.name)
-
 			users = [activity.user] if activity.user else []
 			if activity.role:
 				has_role = frappe.qb.DocType("Has Role")
@@ -95,9 +58,46 @@ class EmployeeBoardingController(Document):
 				if "Administrator" in users:
 					users.remove("Administrator")
 
-			# assign the task the users
-			if users:
-				self.assign_task_to_users(task, users)
+			description = "<b>{}: {}</b>".format(activity.activity_name, self.employee_name or "")
+			if activity.description:
+				description += "<br>" + activity.description
+
+			first_todo = None
+			for user in users or [None]:
+				todo = frappe.get_doc(
+					{
+						"doctype": "ToDo",
+						"allocated_to": user,
+						"role": activity.role,
+						"description": description,
+						"date": dates[1] or dates[0],
+						"reference_type": self.doctype,
+						"reference_name": self.name,
+						"assigned_by": frappe.session.user,
+					}
+				).insert(ignore_permissions=True)
+				first_todo = first_todo or todo.name
+				if user and self.notify_users_by_email:
+					frappe.sendmail(
+						recipients=[user],
+						subject=_("New task: {0}").format(activity.activity_name),
+						message=description,
+						reference_doctype=self.doctype,
+						reference_name=self.name,
+					)
+
+			activity.db_set("todo", first_todo)
+
+	def on_cancel(self):
+		for name in frappe.get_all(
+			"ToDo", filters={"reference_type": self.doctype, "reference_name": self.name}, pluck="name"
+		):
+			frappe.db.set_value("ToDo", name, "status", "Cancelled")
+		for activity in self.activities:
+			activity.db_set("todo", "")
+
+		frappe.msgprint(_("Linked ToDos cancelled."), alert=True, indicator="blue")
+
 
 	def get_holiday_list(self):
 		if self.doctype == "Employee Separation":
@@ -129,31 +129,6 @@ class EmployeeBoardingController(Document):
 			date = add_days(date, 1)
 		return date
 
-	def assign_task_to_users(self, task, users):
-		for user in users:
-			args = {
-				"assign_to": [user],
-				"doctype": task.doctype,
-				"name": task.name,
-				"description": task.description or task.subject,
-				"notify": self.notify_users_by_email,
-			}
-			assign_to.add(args)
-
-	def on_cancel(self):
-		# delete task project
-		project = self.project
-		for task in frappe.get_all("Task", filters={"project": project}):
-			frappe.delete_doc("Task", task.name, force=1)
-		frappe.delete_doc("Project", project, force=1)
-		self.db_set("project", "")
-		for activity in self.activities:
-			activity.db_set("task", "")
-
-		frappe.msgprint(
-			_("Linked Project {} and Tasks deleted.").format(project), alert=True, indicator="blue"
-		)
-
 
 @frappe.whitelist()
 def get_onboarding_details(parent: str, parenttype: str):
@@ -175,25 +150,28 @@ def get_onboarding_details(parent: str, parenttype: str):
 	)
 
 
-def update_employee_boarding_status(project, event=None):
-	employee_onboarding = frappe.db.exists("Employee Onboarding", {"project": project.name})
-	employee_separation = frappe.db.exists("Employee Separation", {"project": project.name})
-
-	if not (employee_onboarding or employee_separation):
+def update_boarding_status_from_todo(todo, event=None):
+	"""Called when a ToDo changes: keep the onboarding/separation status in step with its ToDos."""
+	if todo.reference_type not in ("Employee Onboarding", "Employee Separation") or not todo.reference_name:
 		return
 
+	statuses = frappe.get_all(
+		"ToDo",
+		filters={
+			"reference_type": todo.reference_type,
+			"reference_name": todo.reference_name,
+			"status": ("!=", "Cancelled"),
+		},
+		pluck="status",
+	)
+	if not statuses:
+		return
+
+	done = sum(1 for status in statuses if status == "Closed")
 	status = "Pending"
-	if flt(project.percent_complete) > 0.0 and flt(project.percent_complete) < 100.0:
-		status = "In Process"
-	elif flt(project.percent_complete) == 100.0:
+	if done == len(statuses):
 		status = "Completed"
+	elif done:
+		status = "In Process"
 
-	if employee_onboarding:
-		frappe.db.set_value("Employee Onboarding", employee_onboarding, "boarding_status", status)
-	elif employee_separation:
-		frappe.db.set_value("Employee Separation", employee_separation, "boarding_status", status)
-
-
-def update_task(task, event=None):
-	if task.project and not task.flags.from_project:
-		update_employee_boarding_status(frappe.get_cached_doc("Project", task.project))
+	frappe.db.set_value(todo.reference_type, todo.reference_name, "boarding_status", status)

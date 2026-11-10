@@ -43,8 +43,8 @@ class EmployeeOnboarding(EmployeeBoardingController):
 				if not activity.required_for_employee_creation:
 					continue
 				else:
-					task_status = frappe.db.get_value("Task", activity.task, "status")
-					if task_status not in ["Completed", "Cancelled"]:
+					todo_status = frappe.db.get_value("ToDo", activity.todo, "status") if activity.todo else None
+					if todo_status not in ["Closed", "Cancelled"]:
 						frappe.throw(
 							_("All the mandatory tasks for employee creation are not completed yet."),
 							IncompleteTaskError,
@@ -62,9 +62,12 @@ class EmployeeOnboarding(EmployeeBoardingController):
 	@frappe.whitelist(methods=["POST"])
 	def mark_onboarding_as_completed(self):
 		self.check_permission("write")
-		for activity in self.activities:
-			frappe.db.set_value("Task", activity.task, "status", "Completed")
-		frappe.db.set_value("Project", self.project, "status", "Completed")
+		for name in frappe.get_all(
+			"ToDo",
+			filters={"reference_type": self.doctype, "reference_name": self.name, "status": "Open"},
+			pluck="name",
+		):
+			frappe.db.set_value("ToDo", name, "status", "Closed")
 		self.boarding_status = "Completed"
 		self.save()
 
