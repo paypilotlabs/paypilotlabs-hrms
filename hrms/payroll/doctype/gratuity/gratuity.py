@@ -3,14 +3,12 @@
 
 import frappe
 from frappe import _, bold
-from frappe.query_builder.functions import Abs, Sum
 from frappe.utils import cstr, flt, get_datetime, get_link_to_form
-
-from erpnext.accounts.general_ledger import make_gl_entries
-from erpnext.controllers.accounts_controller import AccountsController
+from frappe.model.document import Document
 
 
-class Gratuity(AccountsController):
+
+class Gratuity(Document):
 	def validate(self):
 		data = self.calculate_work_experience_and_amount()
 		self.current_work_experience = data["current_work_experience"]
@@ -53,55 +51,13 @@ class Gratuity(AccountsController):
 		if self.pay_via_salary_slip:
 			self.create_additional_salary()
 		else:
-			self.create_gl_entries()
+			# paid outside PayPilotLabs People: record it as paid
+			self.db_set("paid_amount", self.amount)
+			self.set_status(update=True)
 
 	def on_cancel(self):
-		self.ignore_linked_doctypes = ["GL Entry", "Payment Ledger Entry", "Advance Payment Ledger Entry"]
-		self.create_gl_entries(cancel=True)
 		self.set_status(update=True)
 
-	def create_gl_entries(self, cancel=False):
-		gl_entries = self.get_gl_entries()
-		make_gl_entries(gl_entries, cancel)
-
-	def get_gl_entries(self):
-		gl_entry = []
-		# payable entry
-		if self.amount:
-			gl_entry.append(
-				self.get_gl_dict(
-					{
-						"account": self.payable_account,
-						"credit": self.amount,
-						"credit_in_account_currency": self.amount,
-						"against": self.expense_account,
-						"party_type": "Employee",
-						"party": self.employee,
-						"against_voucher_type": self.doctype,
-						"against_voucher": self.name,
-						"cost_center": self.cost_center,
-					},
-					item=self,
-				)
-			)
-
-			# expense entries
-			gl_entry.append(
-				self.get_gl_dict(
-					{
-						"account": self.expense_account,
-						"debit": self.amount,
-						"debit_in_account_currency": self.amount,
-						"against": self.payable_account,
-						"cost_center": self.cost_center,
-					},
-					item=self,
-				)
-			)
-		else:
-			frappe.throw(_("Total Amount cannot be zero"))
-
-		return gl_entry
 
 	def create_additional_salary(self):
 		if self.pay_via_salary_slip:
@@ -116,24 +72,6 @@ class Gratuity(AccountsController):
 			additional_salary.ref_docname = self.name
 			additional_salary.submit()
 
-	def set_total_advance_paid(self):
-		aple = frappe.qb.DocType("Advance Payment Ledger Entry")
-		paid_amount = (
-			frappe.qb.from_(aple)
-			.select(Abs(Sum(aple.amount)).as_("paid_amount"))
-			.where(
-				(aple.company == self.company)
-				& (aple.against_voucher_type == self.doctype)
-				& (aple.against_voucher_no == self.name)
-				& (aple.delinked == 0)
-			)
-		).run(as_dict=True)[0].paid_amount or 0
-
-		if flt(paid_amount) > self.amount:
-			frappe.throw(_("Row {0}# Paid Amount cannot be greater than Total amount"))
-
-		self.db_set("paid_amount", paid_amount)
-		self.set_status(update=True)
 
 	@frappe.whitelist()
 	def calculate_work_experience_and_amount(self) -> dict:

@@ -11,42 +11,8 @@ frappe.ui.form.on("Gratuity", {
 			};
 		});
 
-		frm.set_query("expense_account", function () {
-			return {
-				filters: {
-					root_type: ["in", ["Expense", "Liability"]],
-					is_group: 0,
-					company: frm.doc.company,
-				},
-			};
-		});
-
-		frm.set_query("payable_account", function () {
-			return {
-				filters: {
-					root_type: ["in", ["Expense", "Liability"]],
-					is_group: 0,
-					company: frm.doc.company,
-				},
-			};
-		});
 	},
 	refresh: function (frm) {
-		if (frm.doc.docstatus == 1 && !frm.doc.pay_via_salary_slip && frm.doc.status == "Unpaid") {
-			frm.add_custom_button(__("Create Payment Entry"), function () {
-				return frappe.call({
-					method: "hrms.overrides.employee_payment_entry.get_payment_entry_for_employee",
-					args: {
-						dt: frm.doc.doctype,
-						dn: frm.doc.name,
-					},
-					callback: function (r) {
-						var doclist = frappe.model.sync(r.message);
-						frappe.set_route("Form", doclist[0].doctype, doclist[0].name);
-					},
-				});
-			});
-		}
 	},
 
 	employee: function (frm) {

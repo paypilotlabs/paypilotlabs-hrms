@@ -7,8 +7,6 @@ from frappe import _, bold
 from frappe.model.document import Document
 from frappe.utils import flt, format_date, get_link_to_form, getdate
 
-from erpnext.accounts.general_ledger import make_gl_entries
-from erpnext.controllers.accounts_controller import AccountsController
 
 from hrms.hr.doctype.leave_application.leave_application import get_leaves_for_period
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import create_leave_ledger_entry
@@ -18,7 +16,7 @@ from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignmen
 )
 
 
-class LeaveEncashment(AccountsController):
+class LeaveEncashment(Document):
 	def validate(self):
 		set_employee_name(self)
 		validate_active_employee(self.employee)
@@ -47,7 +45,9 @@ class LeaveEncashment(AccountsController):
 			self.db_set("leave_allocation", self.get_leave_allocation().get("name"))
 
 		if self.pay_via_payment_entry:
-			self.create_gl_entries()
+			# paid outside PayPilotLabs People: record it as paid
+			self.db_set("paid_amount", self.encashment_amount)
+			self.set_status(update=True)
 		else:
 			self.create_additional_salary()
 
@@ -68,11 +68,7 @@ class LeaveEncashment(AccountsController):
 				- self.encashment_days,
 			)
 
-		if self.pay_via_payment_entry:
-			self.create_gl_entries(cancel=True)
-
 		self.create_leave_ledger_entry(submit=False)
-		self.ignore_linked_doctypes = ["GL Entry", "Payment Ledger Entry", "Advance Payment Ledger Entry"]
 		self.set_status(update=True)
 
 	@frappe.whitelist()
@@ -270,66 +266,6 @@ class LeaveEncashment(AccountsController):
 			)
 			create_leave_ledger_entry(self, args, submit)
 
-	def set_total_advance_paid(self):
-		from frappe.query_builder.functions import Abs, Sum
-
-		aple = frappe.qb.DocType("Advance Payment Ledger Entry")
-		paid_amount = (
-			frappe.qb.from_(aple)
-			.select(Abs(Sum(aple.amount)).as_("paid_amount"))
-			.where(
-				(aple.company == self.company)
-				& (aple.against_voucher_type == self.doctype)
-				& (aple.against_voucher_no == self.name)
-				& (aple.delinked == 0)
-			)
-		).run(as_dict=True)[0].paid_amount or 0
-		if flt(paid_amount) > self.encashment_amount:
-			frappe.throw(_("Row {0}# Paid Amount cannot be greater than Encashment amount"))
-
-		self.db_set("paid_amount", paid_amount)
-		self.set_status(update=True)
-
-	def create_gl_entries(self, cancel=False):
-		gl_entries = self.get_gl_entries()
-		make_gl_entries(gl_entries, cancel)
-
-	def get_gl_entries(self):
-		gl_entry = []
-
-		# payable entry
-		gl_entry.append(
-			self.get_gl_dict(
-				{
-					"account": self.payable_account,
-					"credit": self.encashment_amount,
-					"credit_in_account_currency": self.encashment_amount,
-					"against": self.expense_account,
-					"party_type": "Employee",
-					"party": self.employee,
-					"against_voucher_type": self.doctype,
-					"against_voucher": self.name,
-					"cost_center": self.cost_center,
-				},
-				item=self,
-			)
-		)
-
-		# expense entry
-		gl_entry.append(
-			self.get_gl_dict(
-				{
-					"account": self.expense_account,
-					"debit": self.encashment_amount,
-					"debit_in_account_currency": self.encashment_amount,
-					"against": self.payable_account,
-					"cost_center": self.cost_center,
-				},
-				item=self,
-			)
-		)
-
-		return gl_entry
 
 	def on_discard(self):
 		self.db_set("status", "Cancelled")
