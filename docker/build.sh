@@ -8,7 +8,7 @@ cd "$(dirname "$0")/.."
 [ -d .frappe_docker ] || git clone --depth 1 https://github.com/frappe/frappe_docker .frappe_docker
 APPS_JSON=$(sed "s#https://github.com/#https://${GITHUB_TOKEN}@github.com/#" docker/apps.json)
 docker build \
-  --build-arg=FRAPPE_PATH="https://${GITHUB_TOKEN}@github.com/paypilotlabs/frappe.git" \
+  --build-arg=FRAPPE_PATH="https://${GITHUB_TOKEN}@github.com/paypilotlabs/paypilotlabs-framework.git" \
   --build-arg=FRAPPE_BRANCH=main \
   --build-arg=PYTHON_VERSION=3.14 \
   --build-arg=NODE_VERSION=24 \
