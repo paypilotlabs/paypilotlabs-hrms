@@ -11,34 +11,9 @@ frappe.ui.form.on("Employee Advance", {
 			};
 		});
 
-		frm.set_query("advance_account", function () {
-			return {
-				filters: {
-					root_type: "Asset",
-					is_group: 0,
-					company: frm.doc.company,
-					account_currency: frm.doc.currency,
-					account_type: "Receivable",
-				},
-			};
-		});
 	},
 
 	refresh: function (frm) {
-		if (
-			frm.doc.docstatus === 1 &&
-			flt(frm.doc.paid_amount) < flt(frm.doc.advance_amount) &&
-			frappe.model.can_create("Payment Entry") &&
-			!(frm.doc.repay_unclaimed_amount_from_salary == 1 && frm.doc.paid_amount)
-		) {
-			frm.add_custom_button(
-				__("Payment"),
-				function () {
-					frm.events.make_payment_entry(frm);
-				},
-				__("Create"),
-			);
-		}
 
 		if (
 			frm.doc.docstatus === 1 &&
@@ -60,17 +35,6 @@ frappe.ui.form.on("Employee Advance", {
 			flt(frm.doc.claimed_amount) < flt(frm.doc.paid_amount) - flt(frm.doc.return_amount)
 		) {
 			if (
-				frm.doc.repay_unclaimed_amount_from_salary == 0 &&
-				frappe.model.can_create("Journal Entry")
-			) {
-				frm.add_custom_button(
-					__("Return"),
-					function () {
-						frm.trigger("make_return_entry");
-					},
-					__("Create"),
-				);
-			} else if (
 				frm.doc.repay_unclaimed_amount_from_salary == 1 &&
 				frappe.model.can_create("Additional Salary")
 			) {
@@ -106,20 +70,6 @@ frappe.ui.form.on("Employee Advance", {
 		});
 	},
 
-	make_payment_entry: function (frm) {
-		return frappe.call({
-			method: "hrms.overrides.employee_payment_entry.get_payment_entry_for_employee",
-			args: {
-				dt: frm.doc.doctype,
-				dn: frm.doc.name,
-			},
-			callback: function (r) {
-				var doclist = frappe.model.sync(r.message);
-				frappe.set_route("Form", doclist[0].doctype, doclist[0].name);
-			},
-		});
-	},
-
 	make_expense_claim: function (frm) {
 		return frappe.call({
 			method: "hrms.hr.doctype.expense_claim.expense_claim.get_expense_claim",
@@ -131,55 +81,6 @@ frappe.ui.form.on("Employee Advance", {
 				frappe.set_route("Form", doclist[0].doctype, doclist[0].name);
 			},
 		});
-	},
-
-	make_return_entry: function (frm) {
-		let dialog = new frappe.ui.Dialog({
-			title: __("Return Advance"),
-			fields: [
-				{
-					label: __("Bank/Cash Account"),
-					fieldname: "bank_account",
-					fieldtype: "Link",
-					options: "Account",
-					description: __(
-						"Optional. Leave blank to use the Mode of Payment set on this Advance, or the Company's Default Cash Account.",
-					),
-					get_query: () => ({
-						filters: {
-							company: frm.doc.company,
-							account_type: ["in", ["Bank", "Cash"]],
-							account_currency: frm.doc.currency,
-							is_group: 0,
-						},
-					}),
-				},
-			],
-			primary_action_label: __("Create"),
-			primary_action: (values) => {
-				dialog.hide();
-				frappe.call({
-					method: "hrms.hr.doctype.employee_advance.employee_advance.make_return_entry",
-					args: {
-						employee: frm.doc.employee,
-						company: frm.doc.company,
-						employee_advance_name: frm.doc.name,
-						return_amount: flt(
-							frm.doc.paid_amount - frm.doc.claimed_amount - frm.doc.return_amount,
-						),
-						advance_account: frm.doc.advance_account,
-						mode_of_payment: frm.doc.mode_of_payment,
-						currency: frm.doc.currency,
-						bank_account: values.bank_account,
-					},
-					callback: function (r) {
-						const doclist = frappe.model.sync(r.message);
-						frappe.set_route("Form", doclist[0].doctype, doclist[0].name);
-					},
-				});
-			},
-		});
-		dialog.show();
 	},
 
 	employee: function (frm) {

@@ -101,7 +101,6 @@ def execute(filters=None):
 				frappe._dict(
 					title=row.name,
 					employee=f"{row.employee}: {row.employee_name}" if row.employee_name else row.employee,
-					advance_account=row.advance_account,
 					department=row.department,
 					branch=row.branch,
 					company=row.company,
@@ -148,13 +147,6 @@ def get_columns():
 			"fieldname": "employee",
 			"fieldtype": "Data",
 			"width": 180,
-		},
-		{
-			"label": _("Advance Account"),
-			"fieldname": "advance_account",
-			"fieldtype": "Link",
-			"options": "Account",
-			"width": 160,
 		},
 		{
 			"label": _("Department"),
@@ -239,7 +231,6 @@ def get_advances(filters):
 			Employee.employee_name,
 			Employee.branch,
 			Employee.department.as_("employee_department"),
-			EmployeeAdvance.advance_account,
 			EmployeeAdvance.department,
 			EmployeeAdvance.paid_amount,
 			EmployeeAdvance.status,
@@ -276,9 +267,6 @@ def get_advances(filters):
 
 	if filters.get("branch"):
 		query = query.where(Employee.branch.isin(filters.get("branch")))
-
-	if filters.get("advance_account"):
-		query = query.where(EmployeeAdvance.advance_account.isin(filters.get("advance_account")))
 
 	if filters.get("group_by") == "Department":
 		query = query.orderby(EmployeeAdvance.department)

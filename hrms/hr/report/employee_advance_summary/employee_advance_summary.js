@@ -68,19 +68,6 @@ frappe.query_reports["Employee Advance Summary"] = {
 			},
 		},
 		{
-			fieldname: "advance_account",
-			label: __("Advance Account"),
-			fieldtype: "MultiSelectList",
-			options: "Account",
-			get_data: function (txt) {
-				var company = frappe.query_report.get_filter_value("company");
-				return frappe.db.get_link_options("Account", txt, {
-					company: company,
-					account_type: "Receivable",
-				});
-			},
-		},
-		{
 			fieldname: "group_by",
 			label: __("Group By"),
 			fieldtype: "Select",

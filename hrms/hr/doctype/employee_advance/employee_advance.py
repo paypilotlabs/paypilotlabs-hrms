@@ -5,13 +5,8 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.query_builder.functions import Abs, Sum
-from frappe.utils import flt, get_link_to_form, nowdate
-
-import erpnext
-
-from hrms.utils.core import get_company_currency
-from erpnext.accounts.doctype.journal_entry.journal_entry import get_default_bank_cash_account
+from frappe.query_builder.functions import Sum
+from frappe.utils import flt
 
 import hrms
 from hrms.hr.utils import validate_active_employee
@@ -25,46 +20,17 @@ class EmployeeAdvance(Document):
 	def validate(self):
 		validate_active_employee(self.employee)
 		self.validate_advance_amount()
-		self.validate_advance_account_currency()
-		self.validate_advance_account_type()
 		self.set_status()
 		self.set_pending_amount()
 
+
 	def before_submit(self):
-		if not self.get("advance_account"):
-			default_advance_account = frappe.db.get_value(
-				"Company", self.company, "default_employee_advance_account"
-			)
-			same_currency = self.currency == get_company_currency(self.company)
-
-			if default_advance_account and same_currency:
-				self.advance_account = default_advance_account
-				return
-
-			if not same_currency:
-				frappe.throw(
-					_("Please set the Advance Account {0} or in {1}").format(
-						get_link_to_form("Employee Advance", self.name + "#advance_account", _("here")),
-						get_link_to_form("Employee", self.employee + "#salary_information", self.employee),
-					),
-					title=_("Advance Account Required"),
-				)
-
-			frappe.throw(
-				_(
-					"Advance Account is mandatory. Please set the {0} in the Company {1} and submit this document."
-				).format(
-					get_link_to_form(
-						"Company", self.company + "#hr_and_payroll_tab", "Default Employee Advance Account"
-					),
-					frappe.bold(self.company),
-				),
-				title=_("Missing Advance Account"),
-			)
+		# PayPilotLabs People has no payment ledger: an advance is treated as paid out when submitted.
+		self.paid_amount = flt(self.advance_amount)
+		self.base_paid_amount = flt(self.advance_amount)
+		self.set_status()
 
 	def on_cancel(self):
-		self.ignore_linked_doctypes = ("GL Entry", "Payment Ledger Entry", "Advance Payment Ledger Entry")
-		self.check_linked_payment_entry()
 		self.set_status(update=True)
 
 	def on_update(self):
@@ -81,27 +47,6 @@ class EmployeeAdvance(Document):
 		if flt(self.advance_amount) <= 0:
 			frappe.throw(_("Advance Amount must be greater than zero."))
 
-	def validate_advance_account_type(self):
-		if not self.advance_account:
-			return
-
-		account_type = frappe.db.get_value("Account", self.advance_account, "account_type")
-		if not account_type or (account_type != "Receivable"):
-			frappe.throw(
-				_("Employee advance account {0} should be of type {1}.").format(
-					get_link_to_form("Account", self.advance_account), frappe.bold(_("Receivable"))
-				)
-			)
-
-	def validate_advance_account_currency(self):
-		if self.currency and self.advance_account:
-			account_currency = frappe.db.get_value("Account", self.advance_account, "account_currency")
-			if self.currency != account_currency:
-				frappe.throw(
-					_(
-						"Advance Account {} currency should be same as Salary Currency of Employee {}. Please select same currency Advance Account"
-					).format(frappe.bold(self.advance_account), frappe.bold(self.employee))
-				)
 
 	def set_status(self, update=False):
 		precision = self.precision("paid_amount")
@@ -146,74 +91,6 @@ class EmployeeAdvance(Document):
 	def on_discard(self):
 		self.db_set("status", "Cancelled")
 
-	def set_total_advance_paid(self):
-		aple = frappe.qb.DocType("Advance Payment Ledger Entry")
-
-		account_type = frappe.get_value("Account", self.advance_account, "account_type")
-
-		if account_type == "Receivable":
-			paid_amount_condition = aple.amount > 0
-			returned_amount_condition = aple.amount < 0
-		elif account_type == "Payable":
-			paid_amount_condition = aple.amount < 0
-			returned_amount_condition = aple.amount > 0
-		else:
-			frappe.throw(
-				_("Employee advance account {0} should be of type {1}.").format(
-					get_link_to_form("Account", self.advance_account),
-					frappe.bold(_("Receivable")),
-				)
-			)
-
-		aple_paid_amount = (
-			frappe.qb.from_(aple)
-			.select(Abs(Sum(aple.amount)).as_("paid_amount"))
-			.select(Abs(Sum(aple.base_amount)).as_("base_paid_amount"))
-			.where(
-				(aple.company == self.company)
-				& (aple.delinked == 0)
-				& (aple.against_voucher_type == self.doctype)
-				& (aple.against_voucher_no == self.name)
-				& (paid_amount_condition)
-				& (aple.event == "Submit")
-			)
-		).run(as_dict=True)[0] or {}
-		paid_amount = aple_paid_amount.get("paid_amount") or 0
-
-		return_amount = (
-			frappe.qb.from_(aple)
-			.select(Abs(Sum(aple.amount)).as_("return_amount"))
-			.where(
-				(aple.company == self.company)
-				& (aple.delinked == 0)
-				& (aple.against_voucher_type == self.doctype)
-				& (aple.against_voucher_no == self.name)
-				& (aple.voucher_type != "Expense Claim")
-				& (returned_amount_condition)
-			)
-		).run(as_dict=True)[0].return_amount or 0
-
-		precision = self.precision("paid_amount")
-		paid_amount = flt(paid_amount, precision)
-		if paid_amount > flt(self.advance_amount, precision):
-			frappe.throw(
-				_("Row {0}# Paid Amount cannot be greater than requested advance amount"),
-				EmployeeAdvanceOverPayment,
-			)
-
-		precision = self.precision("return_amount")
-		return_amount = flt(return_amount, precision)
-
-		if return_amount > 0 and return_amount > flt(paid_amount - self.claimed_amount, precision):
-			frappe.throw(_("Return amount cannot be greater than unclaimed amount"))
-
-		self.db_set("paid_amount", paid_amount)
-		self.db_set("return_amount", return_amount)
-		self.set_status(update=True)
-		self.set_pending_amount(update=True)
-
-		base_paid_amount = aple_paid_amount.get("base_paid_amount") or 0
-		self.db_set("base_paid_amount", base_paid_amount)
 
 	def update_claimed_amount(self):
 		ec = frappe.qb.DocType("Expense Claim")
@@ -253,16 +130,6 @@ class EmployeeAdvance(Document):
 		else:
 			self.pending_amount = pending_amount
 
-	def check_linked_payment_entry(self):
-		from erpnext.accounts.utils import (
-			remove_ref_doc_link_from_pe,
-			update_accounting_ledgers_after_reference_removal,
-		)
-
-		if frappe.db.get_single_value("HR Settings", "unlink_payment_on_cancellation_of_employee_advance"):
-			remove_ref_doc_link_from_pe(self.doctype, self.name)
-			update_accounting_ledgers_after_reference_removal(self.doctype, self.name)
-
 
 @frappe.whitelist()
 def create_return_through_additional_salary(doc: str | dict | Document) -> Document:
@@ -282,120 +149,6 @@ def create_return_through_additional_salary(doc: str | dict | Document) -> Docum
 
 	return additional_salary
 
-
-@frappe.whitelist()
-def make_return_entry(
-	employee: str,
-	company: str,
-	employee_advance_name: str,
-	return_amount: str | float,
-	advance_account: str,
-	currency: str,
-	mode_of_payment: str | None = None,
-	bank_account: str | None = None,
-) -> dict:
-	bank_cash_account = get_same_currency_bank_cash_account(company, currency, mode_of_payment, bank_account)
-
-	if not (bank_cash_account.get("account") or bank_cash_account.get("name")):
-		frappe.msgprint(
-			_(
-				"Couldn't automatically pick a Bank/Cash Account for this return. Please set one in the"
-				" Accounting Entries below, or set a Default Cash Account in the {0} to avoid this next"
-				" time."
-			).format(get_link_to_form("Company", company + "#accounts_tab", _("Company"))),
-			title=_("Bank/Cash Account Not Set"),
-			indicator="orange",
-		)
-
-	advance_account_currency = frappe.db.get_value("Account", advance_account, "account_currency")
-
-	je = frappe.new_doc("Journal Entry")
-	je.posting_date = nowdate()
-	je.voucher_type = get_voucher_type(mode_of_payment)
-	je.company = company
-	je.remark = "Return against Employee Advance: " + employee_advance_name
-	je.multi_currency = 1 if advance_account_currency != get_company_currency(company) else 0
-
-	advance_account_amount = flt(return_amount)
-
-	je.append(
-		"accounts",
-		{
-			"account": advance_account,
-			"credit_in_account_currency": advance_account_amount,
-			"account_currency": advance_account_currency,
-			"reference_type": "Employee Advance",
-			"reference_name": employee_advance_name,
-			"party_type": "Employee",
-			"party": employee,
-			"is_advance": "Yes",
-			"cost_center": erpnext.get_default_cost_center(company),
-		},
-	)
-
-	bank_amount = flt(return_amount)
-	je.append(
-		"accounts",
-		{
-			"account": bank_cash_account.account or bank_cash_account.name,
-			"debit_in_account_currency": bank_amount,
-			"account_currency": bank_cash_account.account_currency,
-			"account_type": bank_cash_account.account_type,
-			"cost_center": erpnext.get_default_cost_center(company),
-		},
-	)
-
-	return je.as_dict()
-
-
-def get_same_currency_bank_cash_account(company, currency, mode_of_payment=None, account=None):
-	company_currency = get_company_currency(company)
-	if currency == company_currency:
-		return get_default_bank_cash_account(
-			company,
-			account_type="Cash",
-			mode_of_payment=None if account else mode_of_payment,
-			account=account,
-		)
-
-	if not account and mode_of_payment:
-		from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
-
-		account = get_bank_cash_account(mode_of_payment, company).get("account")
-
-	if not account:
-		accounts = frappe.get_all(
-			"Account",
-			filters={
-				"company": company,
-				"account_currency": currency,
-				"account_type": ["in", ["Cash", "Bank"]],
-				"is_group": 0,
-			},
-			limit=1,
-		)
-		if not accounts:
-			frappe.throw(
-				_("No Bank/Cash Account found for currency {0}. Please create one under company {1}.").format(
-					frappe.bold(currency), company
-				),
-				title=_("Account Not Found"),
-			)
-		account = accounts[0].name
-	return frappe.get_cached_value(
-		"Account", account, ["name", "account_currency", "account_type"], as_dict=True
-	)
-
-
-def get_voucher_type(mode_of_payment=None):
-	voucher_type = "Cash Entry"
-
-	if mode_of_payment:
-		mode_of_payment_type = frappe.get_cached_value("Mode of Payment", mode_of_payment, "type")
-		if mode_of_payment_type == "Bank":
-			voucher_type = "Bank Entry"
-
-	return voucher_type
 
 
 @frappe.whitelist()
