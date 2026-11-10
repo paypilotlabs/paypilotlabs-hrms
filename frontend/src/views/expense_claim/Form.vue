@@ -81,7 +81,7 @@ const props = defineProps({
 const tabs = [
 	{ name: "Expenses", lastField: "taxes" },
 	{ name: "Advances", lastField: "advances" },
-	{ name: "Totals", lastField: "cost_center" },
+	{ name: "Totals", lastField: "remark" },
 ]
 
 // object to store form data
@@ -212,7 +212,7 @@ const companyDetails = createResource({
 })
 
 const exchangeRate = createResource({
-	url: "erpnext.setup.utils.get_exchange_rate",
+	url: "hrms.utils.queries.get_exchange_rate",
 	onSuccess(data) {
 		expenseClaim.value.exchange_rate = data
 	},
