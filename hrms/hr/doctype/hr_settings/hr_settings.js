@@ -32,7 +32,7 @@ frappe.tour["HR Settings"] = [
 		fieldname: "standard_working_hours",
 		title: "Standard Working Hours",
 		description: __(
-			"Enter the Standard Working Hours for a normal work day. These hours will be used in calculations of reports such as Employee Hours Utilization and Project Profitability analysis.",
+			"Enter the Standard Working Hours for a normal work day.",
 		),
 	},
 	{

@@ -33,10 +33,6 @@
   {
    "is_optional": 1,
    "step": "Create Travel Request"
-  },
-  {
-   "is_optional": 1,
-   "step": "View Unpaid Expense Claim"
   }
  ],
  "title": "Settle employee expenses"
