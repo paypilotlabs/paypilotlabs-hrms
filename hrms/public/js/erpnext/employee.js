@@ -218,28 +218,9 @@ function notify_assignment_created(action, doc) {
 
 frappe.ui.form.on("Employee", {
 	refresh: function (frm) {
-		frm.set_query("payroll_cost_center", function () {
-			return {
-				filters: {
-					company: frm.doc.company,
-					is_group: 0,
-				},
-			};
-		});
 
 		// filter advance account based on salary currency
 		if (frm.doc.salary_currency) {
-			frm.set_query("employee_advance_account", function () {
-				return {
-					filters: {
-						root_type: "Asset",
-						is_group: 0,
-						company: frm.doc.company,
-						account_currency: frm.doc.salary_currency,
-						account_type: "Receivable",
-					},
-				};
-			});
 		}
 		frm.set_df_property("holiday_list", "hidden", 1);
 

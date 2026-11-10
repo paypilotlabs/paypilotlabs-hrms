@@ -32,27 +32,7 @@ frappe.ui.form.on("Salary Structure", {
 
 		frm.toggle_reqd(["payroll_frequency"], !frm.doc.salary_slip_based_on_timesheet);
 
-		frm.set_query("payment_account", function () {
-			var account_types = ["Bank", "Cash"];
-			return {
-				filters: {
-					account_type: ["in", account_types],
-					is_group: 0,
-					company: frm.doc.company,
-				},
-			};
-		});
 		frm.trigger("set_earning_deduction_component");
-	},
-
-	mode_of_payment: function (frm) {
-		erpnext.accounts.pos.get_payment_mode_account(
-			frm,
-			frm.doc.mode_of_payment,
-			function (account) {
-				frm.set_value("payment_account", account);
-			},
-		);
 	},
 
 	set_earning_deduction_component: function (frm) {

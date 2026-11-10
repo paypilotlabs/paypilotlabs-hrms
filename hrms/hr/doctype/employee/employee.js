@@ -28,9 +28,6 @@ erpnext.setup.EmployeeController = class EmployeeController extends frappe.ui.fo
 
 frappe.ui.form.on("Employee", {
 	setup: function (frm) {
-		frm.make_methods = {
-			"Bank Account": () => erpnext.utils.make_bank_account(frm.doc.doctype, frm.doc.name),
-		};
 	},
 
 	onload: function (frm) {

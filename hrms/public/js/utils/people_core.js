@@ -50,11 +50,38 @@ window.erpnext = window.erpnext || {};
 		};
 	u.get_fiscal_year =
 		u.get_fiscal_year ||
-		function (date) {
-			return String(frappe.datetime.str_to_obj(date || frappe.datetime.get_today()).getFullYear());
+		function (date, with_dates) {
+			// fiscal years follow the calendar year in PayPilotLabs People
+			const year = String(frappe.datetime.str_to_obj(date || frappe.datetime.get_today()).getFullYear());
+			return with_dates ? [year, `${year}-01-01`, `${year}-12-31`] : year;
 		};
 	u.get_terms = u.get_terms || function (tc_name, doc, callback) { callback && callback({ message: "" }); };
-	u.map_current_doc = u.map_current_doc || function () {};
+	u.map_current_doc =
+		u.map_current_doc ||
+		function (opts) {
+			// pick a source document and map it into the open form (same contract as the upstream helper)
+			new frappe.ui.form.MultiSelectDialog({
+				doctype: opts.source_doctype,
+				target: opts.target,
+				date_field: opts.date_field,
+				setters: opts.setters,
+				get_query: () => ({ filters: opts.get_query_filters || {} }),
+				action: function (selections) {
+					if (!selections || !selections.length) return;
+					this.dialog.hide();
+					frappe.call({
+						method: opts.method,
+						args: { source_name: selections[0], target_doc: opts.target.doc },
+						callback: function (r) {
+							if (r.exc || !r.message) return;
+							frappe.model.sync(r.message);
+							opts.target.dirty();
+							opts.target.refresh();
+						},
+					});
+				},
+			});
+		};
 	e.queries = e.queries || {};
 	e.queries.employee =
 		e.queries.employee ||
