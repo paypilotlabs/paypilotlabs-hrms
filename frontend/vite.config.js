@@ -24,8 +24,8 @@ export default defineConfig({
 			},
 			manifest: {
 				display: "standalone",
-				name: "Frappe HR",
-				short_name: "Frappe HR",
+				name: "PayPilotLabs People",
+				short_name: "PayPilotLabs People",
 				start_url: "/hrms",
 				scope: "/hrms",
 				id: "/hrms",
