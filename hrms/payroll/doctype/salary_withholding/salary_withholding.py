@@ -126,40 +126,6 @@ def get_payroll_frequency(employee: str, posting_date: str | date) -> str | None
 	return frappe.db.get_value("Salary Structure", salary_structure, "payroll_frequency")
 
 
-def link_bank_entry_in_salary_withholdings(salary_slips: list[dict], bank_entry: str):
-	WithholdingCycle = frappe.qb.DocType("Salary Withholding Cycle")
-	(
-		frappe.qb.update(WithholdingCycle)
-		.set(WithholdingCycle.journal_entry, bank_entry)
-		.where(
-			WithholdingCycle.name.isin([salary_slip.salary_withholding_cycle for salary_slip in salary_slips])
-		)
-	).run()
-
-
-def update_salary_withholding_payment_status(doc: "SalaryWithholding", method: str | None = None):
-	"""update withholding status on bank entry submission/cancellation. Called from hooks"""
-	Withholding = frappe.qb.DocType("Salary Withholding")
-	WithholdingCycle = frappe.qb.DocType("Salary Withholding Cycle")
-	withholdings = (
-		frappe.qb.from_(WithholdingCycle)
-		.inner_join(Withholding)
-		.on(WithholdingCycle.parent == Withholding.name)
-		.select(
-			WithholdingCycle.name.as_("salary_withholding_cycle"),
-			WithholdingCycle.parent.as_("salary_withholding"),
-			Withholding.employee,
-		)
-		.where((WithholdingCycle.journal_entry == doc.name) & (WithholdingCycle.docstatus == 1))
-	).run(as_dict=True)
-
-	if not withholdings:
-		return
-
-	cancel = method == "on_cancel"
-	_update_payment_status_in_payroll(withholdings, cancel=cancel)
-	_update_salary_withholdings(withholdings, cancel=cancel)
-
 
 def _update_payment_status_in_payroll(withholdings: list[dict], cancel: bool = False) -> None:
 	status = "Withheld" if cancel else "Submitted"

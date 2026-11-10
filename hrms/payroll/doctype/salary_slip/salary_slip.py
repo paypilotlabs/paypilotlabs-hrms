@@ -29,7 +29,6 @@ from frappe.utils import (
 )
 from frappe.utils.background_jobs import enqueue
 
-import erpnext
 
 from hrms.utils.core import get_company_currency
 from hrms.utils.core import get_fiscal_year
