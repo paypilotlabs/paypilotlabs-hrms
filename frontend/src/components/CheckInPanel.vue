@@ -64,7 +64,7 @@
 						marginheight="0"
 						marginwidth="0"
 						style="border: 0"
-						:src="`https://maps.google.com/maps?q=${latitude},${longitude}&hl=en&z=15&amp;output=embed`"
+						:src="`https://www.openstreetmap.org/export/embed.html?bbox=${Number(longitude) - 0.005},${Number(latitude) - 0.003},${Number(longitude) + 0.005},${Number(latitude) + 0.003}&layer=mapnik&marker=${latitude},${longitude}`"
 					>
 					</iframe>
 				</div>
