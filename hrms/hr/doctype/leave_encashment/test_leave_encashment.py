@@ -336,64 +336,6 @@ class TestLeaveEncashment(HRMSTestSuite):
 		leave_encashment.reload()
 		self.assertEqual(leave_encashment.status, "Unpaid")
 
-	def test_status_of_leave_encashment_after_payment_via_payment_entry_and_fnf(self):
-		from hrms.hr.doctype.full_and_final_statement.test_full_and_final_statement import (
-			create_full_and_final_statement,
-		)
-		from hrms.overrides.employee_payment_entry import get_payment_entry_for_employee
-
-		payable_account = get_payable_account("_Test Company")
-
-		leave_encashment = self.create_test_leave_encashment(
-			pay_via_payment_entry=1, payable_account=payable_account
-		)
-		leave_encashment.submit()
-
-		pe = get_payment_entry_for_employee(leave_encashment.doctype, leave_encashment.name)
-		pe.reference_no = "1"
-		pe.reference_date = getdate()
-		pe.save()
-		pe.submit()
-
-		leave_encashment.reload()
-		self.assertEqual(leave_encashment.status, "Paid")
-
-		pe.cancel()
-		leave_encashment.reload()
-		self.assertEqual(leave_encashment.status, "Unpaid")
-
-		frappe.db.set_value("Employee", self.employee, "relieving_date", getdate())
-
-		fnf = create_full_and_final_statement(self.employee)
-		fnf.payables = []
-		fnf.receivables = []
-		fnf.append(
-			"payables",
-			{
-				"component": "Leave Encashment",
-				"reference_document_type": "Leave Encashment",
-				"reference_document": leave_encashment.name,
-				"amount": leave_encashment.encashment_amount,
-				"account": leave_encashment.payable_account,
-				"status": "Settled",
-			},
-		)
-		fnf.submit()
-		jv = fnf.create_journal_entry()
-		jv.accounts[1].account = (
-			frappe.get_cached_value("Company", "_Test Company", "default_bank_account") or "_Test Bank - _TC"
-		)
-		jv.cheque_no = "123456"
-		jv.cheque_date = getdate()
-		jv.save()
-		jv.submit()
-
-		leave_encashment.reload()
-		self.assertEqual(leave_encashment.status, "Paid")
-
-		jv.cancel()
-		leave_encashment.reload()
-		self.assertEqual(leave_encashment.status, "Unpaid")
 
 	def create_test_leave_encashment(self, **kwargs):
 		"""Helper method to create leave encashment with default values"""

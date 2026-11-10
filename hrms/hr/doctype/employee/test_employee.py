@@ -6,15 +6,14 @@ import frappe
 import frappe.utils
 from frappe.query_builder import Criterion
 
-import erpnext
 
 from hrms.utils.core import get_default_company
 from hrms.utils.core import build_qb_match_conditions
 from hrms.hr.doctype.employee.employee import InactiveEmployeeStatusError
-from erpnext.tests.utils import ERPNextTestSuite
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestEmployee(ERPNextTestSuite):
+class TestEmployee(HRMSTestSuite):
 	def test_employee_status_left(self):
 		employee1 = make_employee("test_employee_1@company.com", company="_Test Company")
 		employee2 = make_employee("test_employee_2@company.com", company="_Test Company")
@@ -37,7 +36,7 @@ class TestEmployee(ERPNextTestSuite):
 		self.assertTrue("Employee" not in frappe.get_roles(user))
 
 	def test_hr_user_cannot_unlink_or_reenable_admin_users(self):
-		from erpnext.tests.permission_test_utils import as_user, make_fenced_user
+		from hrms.tests.permission_test_utils import as_user, make_fenced_user
 
 		hr_user = make_fenced_user("employee-hr@example.com", ["HR User"])
 		manager = make_fenced_user("employee-linked-manager@example.com", ["System Manager", "Employee"])
@@ -60,7 +59,7 @@ class TestEmployee(ERPNextTestSuite):
 		self.assertEqual(frappe.db.get_value("User", manager, "enabled"), 0)
 
 	def test_hr_user_cannot_reenable_user_through_employee_status(self):
-		from erpnext.tests.permission_test_utils import as_user, make_fenced_user
+		from hrms.tests.permission_test_utils import as_user, make_fenced_user
 
 		hr_user = make_fenced_user("employee-hr@example.com", ["HR User"])
 		staff = make_fenced_user("employee-disabled-staff@example.com", ["Employee"])
@@ -90,7 +89,7 @@ class TestEmployee(ERPNextTestSuite):
 		self.assertEqual(frappe.db.get_value("User", staff, "enabled"), 0)
 
 	def test_hr_user_reenables_only_users_disabled_through_employee_status(self):
-		from erpnext.tests.permission_test_utils import as_user, make_fenced_user
+		from hrms.tests.permission_test_utils import as_user, make_fenced_user
 
 		hr_user = make_fenced_user("employee-hr@example.com", ["HR User"])
 		staff = make_fenced_user("employee-returning-staff@example.com", ["Employee"])
@@ -118,7 +117,7 @@ class TestEmployee(ERPNextTestSuite):
 	def test_hr_roles_link_any_user_except_admins(self):
 		from frappe.permissions import add_permission, reset_perms
 
-		from erpnext.tests.permission_test_utils import as_user, make_fenced_user
+		from hrms.tests.permission_test_utils import as_user, make_fenced_user
 
 		user_admin_role = "_Test User Administrator"
 		if not frappe.db.exists("Role", user_admin_role):
@@ -142,7 +141,7 @@ class TestEmployee(ERPNextTestSuite):
 				new_employee(sales_user).insert()
 
 	def test_hr_user_toggles_user_permission_only_for_non_admin_users(self):
-		from erpnext.tests.permission_test_utils import as_user, make_fenced_user
+		from hrms.tests.permission_test_utils import as_user, make_fenced_user
 
 		hr_user = make_fenced_user("employee-hr@example.com", ["HR User"])
 		manager = make_fenced_user("employee-manager@example.com", ["System Manager"])
@@ -169,7 +168,7 @@ class TestEmployee(ERPNextTestSuite):
 			self.assertEqual(bool(has_permission), expected)
 
 	def test_hr_user_sets_image_of_employee_linked_to_user(self):
-		from erpnext.tests.permission_test_utils import as_user, make_fenced_user
+		from hrms.tests.permission_test_utils import as_user, make_fenced_user
 
 		hr_user = make_fenced_user("employee-hr@example.com", ["HR User"])
 		staff = make_fenced_user("employee-staff@example.com", ["Employee"])

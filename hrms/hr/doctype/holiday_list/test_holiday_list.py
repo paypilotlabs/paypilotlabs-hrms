@@ -8,10 +8,10 @@ import frappe
 from frappe.utils import get_datetime, getdate
 
 from hrms.hr.doctype.holiday_list.holiday_list import local_country_name
-from erpnext.tests.utils import ERPNextTestSuite
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestHolidayList(ERPNextTestSuite):
+class TestHolidayList(HRMSTestSuite):
 	def test_holiday_list(self):
 		today_date = getdate()
 		test_holiday_dates = [today_date - timedelta(days=5), today_date - timedelta(days=4)]
@@ -119,38 +119,6 @@ class TestHolidayList(ERPNextTestSuite):
 		self.assertEqual(len(holiday_list.holidays), 2)
 		self.assertEqual(holiday_list.total_holidays, 1.5)
 
-	def test_recalculate_existing_holiday_list_totals(self):
-		from erpnext.patches.v16_0.recalculate_holiday_list_totals import execute
-
-		cases = (("mixed", [0, 1], 1.5), ("half", [1, 1, 1], 1.5), ("full", [0, 0], 2), ("empty", [], 0))
-		holiday_lists = []
-		for name, half_days, expected in cases:
-			holiday_list = make_holiday_list(
-				f"test_backfill_holidays_{name}",
-				from_date="2023-01-01",
-				to_date="2023-01-03",
-				holiday_dates=[
-					{
-						"holiday_date": date(2023, 1, idx),
-						"description": "Test holiday",
-						"is_half_day": is_half_day,
-					}
-					for idx, is_half_day in enumerate(half_days, start=1)
-				],
-			)
-			# Simulate totals persisted by the old controller, including a stale empty list.
-			holiday_list.db_set("total_holidays", len(half_days) or 1, update_modified=False)
-			holiday_lists.append((holiday_list, expected))
-
-		for _ in range(2):
-			execute()
-			for holiday_list, expected in holiday_lists:
-				with self.subTest(holiday_list=holiday_list.name):
-					total, modified = frappe.db.get_value(
-						"Holiday List", holiday_list.name, ["total_holidays", "modified"]
-					)
-					self.assertEqual(total, expected)
-					self.assertEqual(modified, get_datetime(holiday_list.modified))
 
 	def test_local_holidays(self):
 		holiday_list = frappe.new_doc("Holiday List")

@@ -2,7 +2,7 @@ import frappe
 from frappe.utils import getdate
 
 from hrms.utils.core import get_fiscal_year
-from erpnext.tests.utils import ERPNextTestSuite
+from frappe.tests import IntegrationTestCase
 
 
 class BootStrapTestData:
@@ -367,7 +367,7 @@ class BootStrapTestData:
 BootStrapTestData()
 
 
-class HRMSTestSuite(ERPNextTestSuite):
+class HRMSTestSuite(IntegrationTestCase):
 	"""Class for creating HRMS test records"""
 
 	pass

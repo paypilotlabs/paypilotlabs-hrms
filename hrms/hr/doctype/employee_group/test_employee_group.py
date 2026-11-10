@@ -5,12 +5,11 @@ from unittest.mock import patch
 
 import frappe
 
-from erpnext.crm.doctype.utils import get_scheduled_employees_for_popup
 from hrms.hr.doctype.employee.test_employee import make_employee
-from erpnext.tests.utils import ERPNextTestSuite
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestEmployeeGroup(ERPNextTestSuite):
+class TestEmployeeGroup(HRMSTestSuite):
 	def test_duplicate_member(self):
 		employee = make_employee("group_duplicate@example.com", company="_Test Company")
 		group = frappe.get_doc(
@@ -22,31 +21,6 @@ class TestEmployeeGroup(ERPNextTestSuite):
 		)
 		with self.assertRaises(frappe.ValidationError):
 			group.insert()
-
-	def test_popup_uses_current_active_employee_user(self):
-		employee = make_employee(
-			"group_member@example.com", company="_Test Company", first_name="Group", last_name="Member"
-		)
-		group = frappe.get_doc(
-			{
-				"doctype": "Employee Group",
-				"employee_group_name": "_Test Popup Employee Group",
-				"employee_list": [{"employee": employee}],
-			}
-		).insert()
-		self.assertEqual(group.employee_list[0].employee_name, "Group Member")
-
-		# Only replace the timeslot lookup; the member lookup must query the database.
-		with patch(
-			"erpnext.crm.doctype.utils.frappe.get_all", return_value=[frappe._dict(employee_group=group.name)]
-		):
-			self.assertEqual(get_scheduled_employees_for_popup("test-medium"), {"group_member@example.com"})
-
-			frappe.db.set_value("Employee", employee, "user_id", "Administrator")
-			self.assertEqual(get_scheduled_employees_for_popup("test-medium"), {"Administrator"})
-
-			frappe.db.set_value("Employee", employee, "status", "Left")
-			self.assertEqual(get_scheduled_employees_for_popup("test-medium"), set())
 
 
 def make_employee_group():

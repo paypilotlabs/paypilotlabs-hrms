@@ -3,7 +3,13 @@ from frappe.utils import add_months, get_first_day, get_last_day, getdate, now_d
 
 from hrms.hr.doctype.department.department import get_abbreviated_name
 from hrms.hr.doctype.designation.test_designation import create_designation
-from erpnext.setup.utils import enable_all_roles_and_domains
+
+
+def enable_all_roles_and_domains():
+	"""Give Administrator every role so tests can reach every doctype."""
+	roles = frappe.get_all("Role", filters={"name": ("not in", ["Guest", "All"])}, pluck="name")
+	user = frappe.get_doc("User", "Administrator")
+	user.add_roles(*roles)
 
 
 def before_tests():

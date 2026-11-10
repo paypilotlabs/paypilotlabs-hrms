@@ -4,10 +4,10 @@ import unittest
 
 import frappe
 
-from erpnext.tests.utils import ERPNextTestSuite
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestDepartment(ERPNextTestSuite):
+class TestDepartment(HRMSTestSuite):
 	def test_remove_department_data(self):
 		doc = create_department("Test Department", company="_Test Company")
 		frappe.delete_doc("Department", doc.name)
