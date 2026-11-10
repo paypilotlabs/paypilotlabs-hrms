@@ -8,7 +8,7 @@ from frappe.query_builder import Interval
 from frappe.query_builder.functions import Count, CurDate, UnixTimestamp
 from frappe.utils import add_years, cint, get_link_to_form, getdate
 
-from erpnext.setup.doctype.employee.employee import Employee
+from hrms.hr.doctype.employee.employee import Employee
 
 
 class EmployeeMaster(Employee):

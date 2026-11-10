@@ -3,9 +3,7 @@
 
 import frappe
 from frappe.utils import add_months, getdate
-
-import erpnext
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.utils import DuplicateDeclarationError
 from hrms.tests.utils import HRMSTestSuite

@@ -5,9 +5,7 @@ import frappe
 from frappe.permissions import add_user_permission
 from frappe.utils import add_years, cstr, date_diff, get_first_day, nowdate
 from frappe.utils.make_random import get_random
-
-import erpnext
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_exemption_declaration import (
 	create_payroll_period,

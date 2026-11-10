@@ -4,7 +4,7 @@
 import frappe
 from frappe.utils import add_days, getdate
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.shift_assignment_tool.shift_assignment_tool import ShiftAssignmentTool
 from hrms.hr.doctype.shift_request.test_shift_request import make_shift_request

@@ -3,7 +3,7 @@
 
 import frappe
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.employee_advance.test_employee_advance import make_employee_advance
 from hrms.hr.report.employee_advance_summary.employee_advance_summary import execute

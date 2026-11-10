@@ -150,7 +150,7 @@ before_app_uninstall = "hrms.setup.before_app_uninstall"
 # 	"Event": "frappe.desk.doctype.event.event.has_permission",
 # }
 
-has_upload_permission = {"Employee": "erpnext.setup.doctype.employee.employee.has_upload_permission"}
+has_upload_permission = {"Employee": "hrms.hr.doctype.employee.employee.has_upload_permission"}
 
 # DocType Class
 # ---------------
@@ -170,7 +170,7 @@ override_doctype_class = {
 doc_events = {
 	"User": {
 		"validate": [
-			"erpnext.setup.doctype.employee.employee.validate_employee_role",
+			"hrms.hr.doctype.employee.employee.validate_employee_role",
 			"hrms.overrides.employee_master.update_approver_user_roles",
 		],
 	},

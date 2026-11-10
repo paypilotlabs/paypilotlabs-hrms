@@ -5,7 +5,7 @@ import frappe
 from frappe.permissions import add_user_permission
 from frappe.utils import getdate
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.payroll.doctype.bulk_salary_structure_assignment.bulk_salary_structure_assignment import (
 	BulkSalaryStructureAssignment,

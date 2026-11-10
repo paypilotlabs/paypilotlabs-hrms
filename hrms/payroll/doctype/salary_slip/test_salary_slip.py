@@ -25,9 +25,11 @@ from frappe.utils import (
 from frappe.utils.make_random import get_random
 
 import erpnext
-from erpnext.accounts.utils import get_fiscal_year
-from erpnext.setup.doctype.employee.employee import InactiveEmployeeStatusError
-from erpnext.setup.doctype.employee.test_employee import make_employee
+
+from hrms.utils.core import get_company_currency
+from hrms.utils.core import get_fiscal_year
+from hrms.hr.doctype.employee.employee import InactiveEmployeeStatusError
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.leave_allocation.test_leave_allocation import create_leave_allocation
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
@@ -385,7 +387,7 @@ class TestSalarySlip(HRMSTestSuite):
 	)
 	def test_payment_days_for_mid_joinee_including_holidays_and_unmarked_days(self):
 		# tests mid month joining and relieving along with unmarked days
-		from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
+		from hrms.hr.doctype.holiday_list.holiday_list import is_holiday
 
 		no_of_days = get_no_of_days()
 		month_start_date, month_end_date = get_first_day(nowdate()), get_last_day(nowdate())
@@ -424,7 +426,7 @@ class TestSalarySlip(HRMSTestSuite):
 		},
 	)
 	def test_payment_days_for_mid_joinee_excluding_holidays(self):
-		from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
+		from hrms.hr.doctype.holiday_list.holiday_list import is_holiday
 
 		no_of_days = get_no_of_days()
 		month_start_date, month_end_date = get_first_day(nowdate()), get_last_day(nowdate())
@@ -1126,7 +1128,7 @@ class TestSalarySlip(HRMSTestSuite):
 		},
 	)
 	def test_consider_marked_attendance_on_holidays_with_unmarked_attendance(self):
-		from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
+		from hrms.hr.doctype.holiday_list.holiday_list import is_holiday
 
 		no_of_days = get_no_of_days()
 		month_start_date, month_end_date = get_first_day(nowdate()), get_last_day(nowdate())
@@ -1179,7 +1181,7 @@ class TestSalarySlip(HRMSTestSuite):
 		},
 	)
 	def test_consider_marked_attendance_on_holidays_with_half_day_on_holiday(self):
-		from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
+		from hrms.hr.doctype.holiday_list.holiday_list import is_holiday
 
 		no_of_days = get_no_of_days()
 		month_start_date, month_end_date = get_first_day(nowdate()), get_last_day(nowdate())
@@ -3080,7 +3082,7 @@ def create_tax_slab(
 		currency = "INR"
 
 	if company:
-		currency = erpnext.get_company_currency(company)
+		currency = get_company_currency(company)
 
 	slabs = [
 		{

@@ -10,8 +10,8 @@ from frappe.core.doctype.user_permission.test_user_permission import create_user
 from frappe.permissions import add_user_permission
 from frappe.utils import add_days, get_datetime, get_time, getdate, nowtime
 
-from erpnext.setup.doctype.designation.test_designation import create_designation
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.designation.test_designation import create_designation
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.interview.interview import (
 	DuplicateInterviewRoundError,

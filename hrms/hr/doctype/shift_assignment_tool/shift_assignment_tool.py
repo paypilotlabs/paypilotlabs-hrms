@@ -10,7 +10,7 @@ from frappe.query_builder import Case, Criterion, Interval
 from frappe.query_builder.terms import SubQuery
 from frappe.utils import get_link_to_form
 
-from erpnext.accounts.utils import build_qb_match_conditions
+from hrms.utils.core import build_qb_match_conditions
 
 from hrms.hr.utils import validate_bulk_tool_fields
 

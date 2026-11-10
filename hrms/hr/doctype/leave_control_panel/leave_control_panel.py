@@ -6,7 +6,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import cint, flt, get_link_to_form
 
-from erpnext import get_default_company
+from hrms.utils.core import get_default_company
 
 from hrms.hr.utils import validate_bulk_tool_fields
 

@@ -8,7 +8,7 @@ from frappe import _
 from frappe.query_builder import Criterion
 from frappe.utils import cint, flt, format_datetime, format_duration
 
-from erpnext.accounts.utils import build_qb_match_conditions
+from hrms.utils.core import build_qb_match_conditions
 
 
 def execute(filters=None):

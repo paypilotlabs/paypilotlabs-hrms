@@ -8,7 +8,7 @@ from frappe import _
 from frappe.deprecation_dumpster import deprecation_warning
 from frappe.model.document import Document
 
-from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
+from hrms.hr.doctype.holiday_list.holiday_list import is_holiday
 
 from hrms.hr.doctype.daily_work_summary.daily_work_summary import get_user_emails_from_group
 

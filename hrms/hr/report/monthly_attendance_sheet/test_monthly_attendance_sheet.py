@@ -3,8 +3,8 @@ from dateutil.relativedelta import relativedelta
 import frappe
 from frappe.utils import add_days, get_year_ending, get_year_start, getdate
 
-from erpnext.setup.doctype.employee.employee import is_holiday
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.employee import is_holiday
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (

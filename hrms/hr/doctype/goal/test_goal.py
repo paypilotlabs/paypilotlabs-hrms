@@ -3,7 +3,7 @@
 
 import frappe
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.appraisal_template.test_appraisal_template import create_kras
 from hrms.hr.doctype.goal.goal import get_children, update_status

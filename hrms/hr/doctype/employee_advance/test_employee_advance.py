@@ -6,8 +6,10 @@ from frappe import _dict
 from frappe.utils import flt, nowdate
 
 import erpnext
+
+from hrms.utils.core import get_company_currency
 from erpnext.accounts.doctype.account.test_account import create_account
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.employee_advance.employee_advance import (
 	EmployeeAdvanceOverPayment,
@@ -523,7 +525,7 @@ def manual_journal_entry_for_advance(advance) -> dict:
 	je.voucher_type = "Bank Entry"
 	je.company = doc.company
 	je.remark = "Payment against Employee Advance: " + advance.name + "\n" + doc.purpose
-	je.multi_currency = 1 if doc.currency != erpnext.get_company_currency(doc.company) else 0
+	je.multi_currency = 1 if doc.currency != get_company_currency(doc.company) else 0
 
 	je.append(
 		"accounts",
@@ -575,7 +577,7 @@ def make_employee_advance(employee_name, args=None, do_not_submit=False):
 	doc.employee = employee_name
 	doc.company = "_Test Company"
 	doc.purpose = "For site visit"
-	doc.currency = emp_details.salary_currency or erpnext.get_company_currency("_Test company")
+	doc.currency = emp_details.salary_currency or get_company_currency("_Test company")
 	doc.advance_amount = 1000
 	doc.posting_date = nowdate()
 	doc.advance_account = emp_details.employee_advance_account or "_Test Employee Advance - _TC"

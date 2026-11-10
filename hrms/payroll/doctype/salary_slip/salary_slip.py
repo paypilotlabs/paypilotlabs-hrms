@@ -30,8 +30,9 @@ from frappe.utils import (
 from frappe.utils.background_jobs import enqueue
 
 import erpnext
-from erpnext.accounts.utils import get_fiscal_year
-from erpnext.utilities.transaction_base import TransactionBase
+
+from hrms.utils.core import get_company_currency
+from hrms.utils.core import get_fiscal_year
 
 import hrms
 from hrms.hr.utils import validate_active_employee
@@ -75,7 +76,7 @@ TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
 HALF_DAY_HOLIDAY_FRACTION = 0.5
 
 
-class SalarySlip(TransactionBase):
+class SalarySlip(Document):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 		self.whitelisted_globals = COMPONENT_EVAL_GLOBALS.copy()
@@ -181,7 +182,7 @@ class SalarySlip(TransactionBase):
 
 	def set_net_total_in_words(self):
 		doc_currency = self.currency
-		company_currency = erpnext.get_company_currency(self.company)
+		company_currency = get_company_currency(self.company)
 		total = self.net_pay if self.is_rounding_total_disabled() else self.rounded_total
 		base_total = self.base_net_pay if self.is_rounding_total_disabled() else self.base_rounded_total
 		self.total_in_words = money_in_words(total, doc_currency)

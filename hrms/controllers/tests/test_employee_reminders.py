@@ -6,7 +6,7 @@ from datetime import timedelta
 import frappe
 from frappe.utils import add_months, getdate
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.controllers.employee_reminders import send_holidays_reminder_in_advance
 from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
@@ -19,7 +19,7 @@ from hrms.tests.utils import HRMSTestSuite
 
 class TestEmployeeReminders(HRMSTestSuite):
 	def setUp(self):
-		from erpnext.setup.doctype.holiday_list.test_holiday_list import make_holiday_list
+		from hrms.hr.doctype.holiday_list.test_holiday_list import make_holiday_list
 
 		# Create a test holiday list
 		test_holiday_dates = self.get_test_holiday_dates()
@@ -79,7 +79,7 @@ class TestEmployeeReminders(HRMSTestSuite):
 		]
 
 	def test_is_holiday(self):
-		from erpnext.setup.doctype.employee.employee import is_holiday
+		from hrms.hr.doctype.employee.employee import is_holiday
 
 		self.assertTrue(is_holiday(self.test_employee.name))
 		self.assertTrue(is_holiday(self.test_employee.name, date=self.test_holiday_dates[1]))

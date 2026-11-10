@@ -1,7 +1,7 @@
 import frappe
 from frappe.utils import add_days, add_months, getdate, nowdate
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.leave_allocation.leave_allocation import (
 	BackDatedAllocationError,

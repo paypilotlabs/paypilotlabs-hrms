@@ -3,9 +3,7 @@
 
 import frappe
 from frappe.utils import add_days, add_months, nowdate
-
-import erpnext
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_employee_salary_slip

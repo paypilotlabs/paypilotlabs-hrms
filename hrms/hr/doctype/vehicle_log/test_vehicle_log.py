@@ -7,7 +7,7 @@ import frappe
 from frappe.desk.form.linked_with import cancel_all_linked_docs, get_submitted_linked_docs
 from frappe.utils import cstr, flt, nowdate, random_string
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.vehicle_log.vehicle_log import (
 	get_draft_expense_claim_cancellation_actions,

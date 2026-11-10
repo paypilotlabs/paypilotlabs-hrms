@@ -6,7 +6,7 @@ from datetime import timedelta
 import frappe
 from frappe.utils import add_days, get_datetime, getdate, now_datetime, nowdate
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 from hrms.hr.doctype.overtime_type.test_overtime_type import create_overtime_type

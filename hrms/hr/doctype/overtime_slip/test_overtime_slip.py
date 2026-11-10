@@ -4,7 +4,7 @@
 import frappe
 from frappe.utils import add_days, flt, get_first_day, getdate, nowdate, today
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 from hrms.hr.doctype.overtime_type.test_overtime_type import create_overtime_type

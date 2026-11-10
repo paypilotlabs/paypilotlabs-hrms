@@ -1,7 +1,7 @@
 import frappe
 from frappe.utils import getdate
 
-from erpnext.accounts.utils import get_fiscal_year
+from hrms.utils.core import get_fiscal_year
 from erpnext.tests.utils import ERPNextTestSuite
 
 

@@ -4,7 +4,7 @@
 import frappe
 from frappe.utils.data import add_to_date, today
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import expire_allocation
 from hrms.tests.utils import HRMSTestSuite

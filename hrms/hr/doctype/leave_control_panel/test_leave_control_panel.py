@@ -5,7 +5,7 @@ from datetime import date
 
 import frappe
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.leave_allocation.test_leave_allocation import create_leave_allocation
 from hrms.hr.doctype.leave_control_panel.leave_control_panel import LeaveControlPanel

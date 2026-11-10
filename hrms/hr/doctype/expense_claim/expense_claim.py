@@ -11,15 +11,14 @@ from frappe.query_builder.functions import Sum
 from frappe.utils import cstr, flt, get_link_to_form, today
 
 import erpnext
+
+from hrms.utils.core import get_company_currency
 from erpnext.accounts.doctype.repost_accounting_ledger.repost_accounting_ledger import (
 	validate_docs_for_voucher_types,
 )
 from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
 from erpnext.accounts.general_ledger import make_gl_entries
-from erpnext.accounts.utils import (
-	create_gain_loss_journal,
-	unlink_ref_doc_from_payment_entries,
-)
+from erpnext.accounts.utils import create_gain_loss_journal, unlink_ref_doc_from_payment_entries
 from erpnext.controllers.accounts_controller import AccountsController
 
 import hrms
@@ -485,7 +484,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		if frappe.db.get_single_value("HR Settings", "enable_multi_currency_expense_claim"):
 			return
 
-		self.currency = erpnext.get_company_currency(self.company)
+		self.currency = get_company_currency(self.company)
 		self.exchange_rate = 1.0
 		for advance in self.get("advances"):
 			advance.exchange_rate = 1.0
@@ -829,7 +828,7 @@ def get_expense_claim(employee_advance: str | dict) -> Document:
 	expense_claim.employee = employee_advance.employee
 	expense_claim.payable_account = (
 		get_default_payable_account(company)
-		if employee_advance.currency == erpnext.get_company_currency(company)
+		if employee_advance.currency == get_company_currency(company)
 		else None
 	)
 	expense_claim.cost_center = default_cost_center

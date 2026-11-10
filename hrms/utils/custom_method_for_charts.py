@@ -1,8 +1,8 @@
 import frappe
 from frappe.utils import get_first_day, get_last_day, getdate
 
-from erpnext import get_default_company
-from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
+from hrms.utils.core import get_default_company
+from hrms.hr.doctype.employee.employee import get_holiday_list_for_employee
 
 from hrms.utils.holiday_list import get_assigned_holiday_list
 

@@ -2,8 +2,8 @@ from unittest.mock import patch
 
 import frappe
 
-from erpnext.setup.doctype.designation.test_designation import create_designation
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.designation.test_designation import create_designation
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.appraisal_cycle.test_appraisal_cycle import create_appraisal_cycle
 from hrms.hr.doctype.appraisal_template.test_appraisal_template import create_appraisal_template

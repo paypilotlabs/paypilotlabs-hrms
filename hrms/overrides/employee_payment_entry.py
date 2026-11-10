@@ -7,13 +7,15 @@ from frappe.model.document import Document
 from frappe.utils import flt, get_link_to_form, nowdate
 
 import erpnext
+
+from hrms.utils.core import get_company_currency
 from erpnext.accounts.doctype.payment_entry.payment_entry import (
 	PaymentEntry,
 	get_bank_cash_account,
 	get_reference_details,
 )
 from erpnext.accounts.utils import get_account_currency
-from erpnext.setup.utils import get_exchange_rate
+from hrms.utils.core import get_exchange_rate
 
 from hrms.hr.doctype.expense_claim.expense_claim import get_outstanding_amount_for_claim
 
@@ -274,7 +276,7 @@ def get_reference_details_for_employee(
 	total_amount = outstanding_amount = exchange_rate = None
 
 	ref_doc = frappe.get_doc(reference_doctype, reference_name)
-	company_currency = ref_doc.get("company_currency") or erpnext.get_company_currency(ref_doc.company)
+	company_currency = ref_doc.get("company_currency") or get_company_currency(ref_doc.company)
 
 	total_amount, exchange_rate = get_total_amount_and_exchange_rate(
 		ref_doc, party_account_currency, company_currency

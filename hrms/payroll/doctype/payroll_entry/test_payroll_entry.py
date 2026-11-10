@@ -8,10 +8,9 @@ from dateutil.relativedelta import relativedelta
 import frappe
 from frappe.query_builder.functions import Coalesce, Sum
 from frappe.utils import add_days, add_months, cstr, date_diff, flt, get_first_day, get_last_day
-
-import erpnext
-from erpnext.accounts.utils import get_fiscal_year, getdate, nowdate
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.utils.core import get_fiscal_year
+from frappe.utils import getdate, nowdate
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.employee_advance.employee_advance import (
 	create_return_through_additional_salary,

@@ -4,7 +4,7 @@
 import frappe
 from frappe.utils import add_days, get_first_day, get_last_day, getdate, nowdate
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.staffing_plan.staffing_plan import ParentCompanyError, SubsidiaryCompanyError
 from hrms.tests.utils import HRMSTestSuite

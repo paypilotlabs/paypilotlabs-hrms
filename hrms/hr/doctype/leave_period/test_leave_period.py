@@ -2,9 +2,6 @@
 # See license.txt
 
 import frappe
-
-import erpnext
-
 from hrms.tests.utils import HRMSTestSuite
 
 

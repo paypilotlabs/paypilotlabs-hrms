@@ -4,7 +4,7 @@
 import frappe
 from frappe.utils import get_first_day, get_last_day, nowdate
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure

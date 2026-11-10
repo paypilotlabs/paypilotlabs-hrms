@@ -2,7 +2,7 @@ import frappe
 from frappe import _
 from frappe.utils import add_days, date_diff
 
-from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
+from hrms.hr.doctype.employee.employee import get_holiday_list_for_employee
 
 from hrms.hr.doctype.shift_assignment.shift_assignment import ShiftAssignment
 from hrms.hr.doctype.shift_assignment_tool.shift_assignment_tool import create_shift_assignment

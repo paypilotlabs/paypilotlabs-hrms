@@ -9,6 +9,8 @@ from frappe.query_builder.functions import Abs, Sum
 from frappe.utils import flt, get_link_to_form, nowdate
 
 import erpnext
+
+from hrms.utils.core import get_company_currency
 from erpnext.accounts.doctype.journal_entry.journal_entry import get_default_bank_cash_account
 
 import hrms
@@ -33,7 +35,7 @@ class EmployeeAdvance(Document):
 			default_advance_account = frappe.db.get_value(
 				"Company", self.company, "default_employee_advance_account"
 			)
-			same_currency = self.currency == erpnext.get_company_currency(self.company)
+			same_currency = self.currency == get_company_currency(self.company)
 
 			if default_advance_account and same_currency:
 				self.advance_account = default_advance_account
@@ -312,7 +314,7 @@ def make_return_entry(
 	je.voucher_type = get_voucher_type(mode_of_payment)
 	je.company = company
 	je.remark = "Return against Employee Advance: " + employee_advance_name
-	je.multi_currency = 1 if advance_account_currency != erpnext.get_company_currency(company) else 0
+	je.multi_currency = 1 if advance_account_currency != get_company_currency(company) else 0
 
 	advance_account_amount = flt(return_amount)
 
@@ -347,7 +349,7 @@ def make_return_entry(
 
 
 def get_same_currency_bank_cash_account(company, currency, mode_of_payment=None, account=None):
-	company_currency = erpnext.get_company_currency(company)
+	company_currency = get_company_currency(company)
 	if currency == company_currency:
 		return get_default_bank_cash_account(
 			company,

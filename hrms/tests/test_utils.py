@@ -1,8 +1,8 @@
 import frappe
 from frappe.utils import add_months, get_first_day, get_last_day, getdate, now_datetime
 
-from erpnext.setup.doctype.department.department import get_abbreviated_name
-from erpnext.setup.doctype.designation.test_designation import create_designation
+from hrms.hr.doctype.department.department import get_abbreviated_name
+from hrms.hr.doctype.designation.test_designation import create_designation
 from erpnext.setup.utils import enable_all_roles_and_domains
 
 
@@ -80,7 +80,7 @@ def get_non_holiday_date(employee: str, for_date=None):
 	fail when the suite happens to run on a weekend or holiday."""
 	from frappe.utils import add_days
 
-	from erpnext.setup.doctype.employee.employee import is_holiday
+	from hrms.hr.doctype.employee.employee import is_holiday
 
 	date = getdate(for_date)
 	while is_holiday(employee=employee, date=date):

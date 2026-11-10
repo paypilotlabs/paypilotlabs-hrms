@@ -4,7 +4,7 @@
 import frappe
 from frappe.utils import nowdate
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.interview.test_interview import create_interview_type
 from hrms.hr.doctype.job_applicant.job_applicant import create_interview

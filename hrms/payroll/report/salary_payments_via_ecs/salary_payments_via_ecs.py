@@ -7,9 +7,7 @@ from frappe import _
 from frappe.query_builder import DocType
 from frappe.query_builder.functions import Extract
 
-import erpnext
-
-
+from hrms.utils.core import get_region
 def execute(filters=None):
 	columns = get_columns(filters)
 	data = get_data(filters)
@@ -57,7 +55,7 @@ def get_columns(filters):
 		{"label": _("Bank"), "fieldname": "bank", "fieldtype": "Data", "width": 140},
 		{"label": _("Account No"), "fieldname": "account_no", "fieldtype": "Data", "width": 140},
 	]
-	if erpnext.get_region() == "India":
+	if get_region() == "India":
 		columns += [
 			{"label": _("IFSC"), "fieldname": "ifsc", "fieldtype": "Data", "width": 140},
 			{"label": _("MICR"), "fieldname": "micr", "fieldtype": "Data", "width": 140},
@@ -89,7 +87,7 @@ def get_data(filters):
 	filter_clauses = get_conditions(filters)
 
 	fields = ["employee", "branch", "bank_name", "bank_ac_no", "salary_mode"]
-	if erpnext.get_region() == "India":
+	if get_region() == "India":
 		fields += ["ifsc_code", "micr_code"]
 
 	employee_details = frappe.get_list("Employee", fields=fields)
@@ -133,7 +131,7 @@ def get_data(filters):
 		if employee_data_dict.get(d.employee).get("salary_mode") == "Bank":
 			employee["bank"] = employee_data_dict.get(d.employee).get("bank_name")
 			employee["account_no"] = employee_data_dict.get(d.employee).get("bank_ac_no")
-			if erpnext.get_region() == "India":
+			if get_region() == "India":
 				employee["ifsc"] = employee_data_dict.get(d.employee).get("ifsc_code")
 				employee["micr"] = employee_data_dict.get(d.employee).get("micr_code")
 		else:

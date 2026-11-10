@@ -6,8 +6,7 @@ import frappe
 from frappe import _
 from frappe.utils import flt
 
-import erpnext
-
+from hrms.utils.core import get_company_currency
 from hrms.payroll.utils import COMPONENT_PARENTFIELDS
 
 salary_slip = frappe.qb.DocType("Salary Slip")
@@ -21,7 +20,7 @@ def execute(filters=None):
 	currency = None
 	if filters.get("currency"):
 		currency = filters.get("currency")
-	company_currency = erpnext.get_company_currency(filters.get("company"))
+	company_currency = get_company_currency(filters.get("company"))
 
 	salary_slips = get_salary_slips(filters, company_currency)
 	if not salary_slips:

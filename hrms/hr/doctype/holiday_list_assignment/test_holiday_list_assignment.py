@@ -6,7 +6,7 @@ from contextlib import contextmanager
 import frappe
 from frappe.utils import add_days, add_months, get_year_ending, get_year_start, getdate
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import DuplicateAssignment

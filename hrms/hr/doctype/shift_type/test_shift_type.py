@@ -13,7 +13,7 @@ from frappe.utils import (
 	now_datetime,
 )
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import assign_holiday_list
 from hrms.hr.doctype.leave_application.test_leave_application import get_first_sunday
@@ -971,7 +971,7 @@ class TestShiftType(HRMSTestSuite):
 			"test_working_hours3@example.com", company="_Test Company", default_shift=shift.name
 		)
 
-		from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
+		from hrms.hr.doctype.holiday_list.holiday_list import is_holiday
 
 		# anchor to a working day in the shift's holiday list so that adding "today" as a
 		# half day holiday is not skipped because today is already a weekly off (weekend),

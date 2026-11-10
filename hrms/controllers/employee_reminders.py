@@ -7,7 +7,7 @@ from frappe.query_builder import DatePart
 from frappe.query_builder.functions import Extract
 from frappe.utils import add_days, add_months, comma_sep, getdate
 
-from erpnext.setup.doctype.employee.employee import get_all_employee_emails, get_employee_email
+from hrms.hr.doctype.employee.employee import get_all_employee_emails, get_employee_email
 
 from hrms.hr.utils import get_holidays_for_employee
 

@@ -4,7 +4,7 @@
 import frappe
 from frappe.utils import add_days, add_months, floor, flt, get_datetime, get_first_day, getdate
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.expense_claim.test_expense_claim import get_payable_account

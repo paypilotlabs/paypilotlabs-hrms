@@ -3,8 +3,8 @@
 
 import frappe
 
-from erpnext.setup.doctype.designation.test_designation import create_designation
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.designation.test_designation import create_designation
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.appraisal_template.test_appraisal_template import create_appraisal_template
 from hrms.tests.test_utils import create_company

@@ -3,7 +3,7 @@ from datetime import date, datetime, time
 import frappe
 from frappe.utils import format_datetime
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
+from hrms.hr.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type

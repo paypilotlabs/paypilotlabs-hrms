@@ -7,8 +7,8 @@ from frappe.desk.form import assign_to
 from frappe.model.document import Document
 from frappe.utils import add_days, flt, unique
 
-from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
-from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
+from hrms.hr.doctype.employee.employee import get_holiday_list_for_employee
+from hrms.hr.doctype.holiday_list.holiday_list import is_holiday
 
 
 class EmployeeBoardingController(Document):
