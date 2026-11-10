@@ -1,31 +1,138 @@
-version: "3.8" # Updated version
+# PayPilotLabs People: local stack based on frappe_docker (https://github.com/frappe/frappe_docker, MIT).
+# Build the image first (see README "Run it"), then: docker compose -f docker/docker-compose.yml up -d
+# Development defaults only: change both passwords before using this anywhere real.
+name: pp-people
+
+x-app: &app
+  image: ${IMAGE:-paypilotlabs/people}:${TAG:-latest}
+  restart: unless-stopped
+  volumes:
+    - sites:/home/frappe/frappe-bench/sites
+    - logs:/home/frappe/frappe-bench/logs
+  depends_on:
+    configurator:
+      condition: service_completed_successfully
+
 services:
-  mariadb:
-    image: mariadb:10.8
+  db:
+    image: mariadb:11.8
+    restart: unless-stopped
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
       - --skip-character-set-client-handshake
-      - --skip-innodb-read-only-compressed # Temporary fix for MariaDB 10.6
+      - --skip-innodb-read-only-compressed
     environment:
-      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-admin}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-admin}
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      retries: 30
     volumes:
-      - mariadb-data:/var/lib/mysql
+      - db-data:/var/lib/mysql
 
-  redis:
-    image: redis:alpine
+  redis-cache:
+    image: redis:7-alpine
+    restart: unless-stopped
 
-  frappe:
-    image: frappe/bench:latest
-    command: bash /workspace/init.sh
+  redis-queue:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis-queue-data:/data
+
+  configurator:
+    image: ${IMAGE:-paypilotlabs/people}:${TAG:-latest}
+    restart: "no"
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        ls -1 apps > sites/apps.txt;
+        bench set-config -g db_host db;
+        bench set-config -gp db_port 3306;
+        bench set-config -g redis_cache "redis://redis-cache:6379";
+        bench set-config -g redis_queue "redis://redis-queue:6379";
+        bench set-config -g redis_socketio "redis://redis-queue:6379";
+        bench set-config -gp socketio_port 9000;
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+    depends_on:
+      db:
+        condition: service_healthy
+      redis-cache:
+        condition: service_started
+      redis-queue:
+        condition: service_started
+
+  create-site:
+    image: ${IMAGE:-paypilotlabs/people}:${TAG:-latest}
+    restart: "no"
+    entrypoint: ["bash", "-c"]
+    command:
+      - >
+        wait-for-it -t 120 db:3306;
+        wait-for-it -t 120 redis-cache:6379;
+        wait-for-it -t 120 redis-queue:6379;
+        export start=`date +%s`;
+        until [[ -n `grep -hs ^ sites/common_site_config.json | jq -r ".db_host // empty"` ]] && \
+          [[ -n `grep -hs ^ sites/common_site_config.json | jq -r ".redis_cache // empty"` ]] && \
+          [[ -n `grep -hs ^ sites/common_site_config.json | jq -r ".redis_queue // empty"` ]];
+        do
+          echo "Waiting for sites/common_site_config.json to be created";
+          sleep 5;
+          if (( `date +%s`-start > 120 )); then echo "could not find sites/common_site_config.json with required keys"; exit 1; fi
+        done;
+        echo "sites/common_site_config.json found";
+        [ -d sites/${SITE_NAME:-people.localhost} ] || bench new-site --mariadb-user-host-login-scope='%' \
+          --admin-password=${ADMIN_PASSWORD:-admin} --db-root-username=root --db-root-password=${DB_ROOT_PASSWORD:-admin} \
+          --install-app hrms --set-default ${SITE_NAME:-people.localhost};
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+      - logs:/home/frappe/frappe-bench/logs
+    depends_on:
+      configurator:
+        condition: service_completed_successfully
+
+  backend:
+    <<: *app
+
+  websocket:
+    <<: *app
+    command: ["node", "/home/frappe/frappe-bench/apps/frappe/socketio.js"]
+
+  queue-short:
+    <<: *app
+    command: ["bench", "worker", "--queue", "short,default"]
+
+  queue-long:
+    <<: *app
+    command: ["bench", "worker", "--queue", "long,default,short"]
+
+  scheduler:
+    <<: *app
+    command: ["bench", "schedule"]
+
+  frontend:
+    <<: *app
+    command: ["nginx-entrypoint.sh"]
     environment:
-      - SHELL=/bin/bash
-    working_dir: /home/frappe
-    volumes:
-      - .:/workspace
+      BACKEND: backend:8000
+      SOCKETIO: websocket:9000
+      FRAPPE_SITE_NAME_HEADER: ${SITE_NAME:-people.localhost}
+      UPSTREAM_REAL_IP_ADDRESS: 127.0.0.1
+      UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
+      UPSTREAM_REAL_IP_RECURSIVE: "off"
+      PROXY_READ_TIMEOUT: 120
+      CLIENT_MAX_BODY_SIZE: 50m
     ports:
-      - 8000:8000
-      - 9000:9000
+      - "${HTTP_PORT:-8080}:8080"
+    depends_on:
+      - backend
+      - websocket
 
 volumes:
-  mariadb-data:
+  db-data:
+  redis-queue-data:
+  sites:
+  logs:
