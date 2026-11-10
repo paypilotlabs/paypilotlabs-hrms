@@ -1,0 +1,38 @@
+name: Bug report
+description: Something in PayPilotLabs HRMS does not work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened
+      description: A clear description of the bug.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. Go to ...\n2. Click ...\n3. See error"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs actual
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+  - type: dropdown
+    id: os
+    attributes:
+      label: Where you run it
+      options: [Docker, macOS, Windows, Linux, Other]
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or traceback
+      render: shell

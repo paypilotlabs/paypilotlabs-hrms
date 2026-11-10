@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.14"
+      - name: Python compiles
+        run: python -m compileall -q -x "node_modules" hrms
+      - name: No imports of other PayPilotLabs products
+        run: python .github/scripts/check_independence.py
+
+  frontend:
+    name: frontend
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "22"
+      - name: Stub bench config the build reads
+        run: mkdir -p "$GITHUB_WORKSPACE/../../sites" && echo '{}' > "$GITHUB_WORKSPACE/../../sites/common_site_config.json"
+      - name: Build frontend
+        working-directory: frontend
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+        run: |
+          npx --yes yarn@1.22.22 install --frozen-lockfile --ignore-scripts --non-interactive
+          npx --yes yarn@1.22.22 build
+      - name: Build roster
+        working-directory: roster
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
+        run: |
+          npx --yes yarn@1.22.22 install --frozen-lockfile --ignore-scripts --non-interactive
+          npx --yes yarn@1.22.22 build
