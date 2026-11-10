@@ -146,3 +146,23 @@ hrms.setup.company_size_modules = {
 	"201–1,000": ["leave_attendance", "payroll", "recruitment", "performance"],
 	"1,000+": ["leave_attendance", "payroll", "recruitment", "performance"],
 };
+
+// PayPilotLabs People: without Books there is no organisation slide, so ask for the company here.
+frappe.setup.on("before_load", function () {
+	if (frappe.setup.slides.some((s) => ["organization", "people_company"].includes(s.name))) return;
+	frappe.setup.add_slide({
+		name: "people_company",
+		title: __("Your company"),
+		fields: [
+			{ fieldname: "company_name", label: __("Company Name"), fieldtype: "Data", reqd: 1 },
+			{ fieldname: "company_abbr", label: __("Abbreviation"), fieldtype: "Data", reqd: 1 },
+		],
+		onload(slide) {
+			slide.get_input("company_name").on("change", function () {
+				const name = $(this).val() || "";
+				const abbr = name.split(" ").filter(Boolean).map((w) => w[0]).join("").toUpperCase().slice(0, 5);
+				slide.get_field("company_abbr").set_value(abbr);
+			});
+		},
+	});
+});

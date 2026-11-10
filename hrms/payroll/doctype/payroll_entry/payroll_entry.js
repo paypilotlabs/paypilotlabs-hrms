@@ -302,7 +302,7 @@ frappe.ui.form.on("Payroll Entry", {
 		if (frm.doc.currency) {
 			if (company_currency != frm.doc.currency) {
 				frappe.call({
-					method: "erpnext.setup.utils.get_exchange_rate",
+					method: "hrms.utils.queries.get_exchange_rate",
 					args: {
 						from_currency: frm.doc.currency,
 						to_currency: company_currency,

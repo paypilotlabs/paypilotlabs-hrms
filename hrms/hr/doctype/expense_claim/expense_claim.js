@@ -63,7 +63,7 @@ frappe.ui.form.on("Expense Claim", {
 
 		frm.set_query("employee", function () {
 			return {
-				query: "erpnext.controllers.queries.employee_query",
+				query: "hrms.utils.queries.employee_query",
 			};
 		});
 
@@ -210,7 +210,7 @@ frappe.ui.form.on("Expense Claim", {
 			}
 			if (from_currency != company_currency) {
 				frappe.call({
-					method: "erpnext.setup.utils.get_exchange_rate",
+					method: "hrms.utils.queries.get_exchange_rate",
 					args: {
 						from_currency: from_currency,
 						to_currency: company_currency,

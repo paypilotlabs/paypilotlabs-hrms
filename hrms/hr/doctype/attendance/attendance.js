@@ -9,7 +9,7 @@ frappe.ui.form.on("Attendance", {
 
 		frm.set_query("employee", () => {
 			return {
-				query: "erpnext.controllers.queries.employee_query",
+				query: "hrms.utils.queries.employee_query",
 			};
 		});
 

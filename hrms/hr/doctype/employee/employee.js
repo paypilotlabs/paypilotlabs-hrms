@@ -12,7 +12,7 @@ erpnext.setup.EmployeeController = class EmployeeController extends frappe.ui.fo
 		};
 		this.frm.fields_dict.reports_to.get_query = function (doc, cdt, cdn) {
 			return {
-				query: "erpnext.controllers.queries.employee_query",
+				query: "hrms.utils.queries.employee_query",
 				filters: [
 					["status", "=", "Active"],
 					["name", "!=", doc.name],
@@ -75,7 +75,7 @@ frappe.ui.form.on("Employee", {
 
 						frappe
 							.call({
-								method: "erpnext.setup.doctype.employee.employee.create_user",
+								method: "hrms.hr.doctype.employee.employee.create_user",
 								args: {
 									employee: frm.doc.name,
 									email: values.email,

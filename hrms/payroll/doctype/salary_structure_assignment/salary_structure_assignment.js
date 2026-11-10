@@ -5,7 +5,7 @@ frappe.ui.form.on("Salary Structure Assignment", {
 	setup: function (frm) {
 		frm.set_query("employee", function () {
 			return {
-				query: "erpnext.controllers.queries.employee_query",
+				query: "hrms.utils.queries.employee_query",
 				filters: { company: frm.doc.company },
 			};
 		});
