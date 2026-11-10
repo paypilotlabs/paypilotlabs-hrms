@@ -89,7 +89,7 @@ class BulkSalaryStructureAssignment(Document):
 					salary_structure=self.salary_structure,
 					company=self.company,
 					currency=self.currency,
-					payroll_payable_account=self.payroll_payable_account,
+					payroll_payable_account=None,
 					from_date=self.from_date,
 					base=d["base"],
 					variable=d["variable"],

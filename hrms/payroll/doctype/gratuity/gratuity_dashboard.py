@@ -7,5 +7,5 @@ def get_data():
 		"non_standard_fieldnames": {
 			"Additional Salary": "ref_docname",
 		},
-		"transactions": [{"label": _("Payment"), "items": ["Payment Entry", "Additional Salary"]}],
+		"transactions": [{"label": _("Payment"), "items": ["Additional Salary"]}],
 	}

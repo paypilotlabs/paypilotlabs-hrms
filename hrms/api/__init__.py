@@ -699,12 +699,8 @@ def get_currency_symbols() -> dict:
 @frappe.whitelist()
 def get_company_cost_center_and_expense_account(company: str) -> dict:
 	frappe.has_permission("Company", "read", company, throw=True)
-	return frappe.db.get_value(
-		"Company",
-		company,
-		["cost_center", "default_expense_claim_payable_account", "default_payroll_payable_account"],
-		as_dict=True,
-	)
+	# PayPilotLabs People keeps no cost centers or ledger accounts
+	return frappe._dict()
 
 
 # Form View APIs

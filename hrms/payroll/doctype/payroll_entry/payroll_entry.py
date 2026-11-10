@@ -689,10 +689,12 @@ def get_end_date(start_date: str | datetime.date, frequency: str) -> dict:
 
 
 def get_month_details(year, month):
-	ysd = frappe.db.get_value("Fiscal Year", year, "year_start_date")
+	import calendar
+	import datetime
+
+	# fiscal years follow the calendar year in PayPilotLabs People (see hrms.utils.core.get_fiscal_year)
+	ysd = datetime.date(cint(year), 1, 1) if cint(year) else None
 	if ysd:
-		import calendar
-		import datetime
 
 		diff_mnt = cint(month) - cint(ysd.month)
 		if diff_mnt < 0:

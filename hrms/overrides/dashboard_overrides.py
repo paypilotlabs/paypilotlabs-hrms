@@ -44,10 +44,8 @@ def get_dashboard_for_employee(data):
 					"Salary Structure Assignment",
 					"Salary Slip",
 					"Additional Salary",
-					"Timesheet",
 					"Employee Incentive",
 					"Retention Bonus",
-					"Bank Account",
 					"Overtime Slip",
 					"Arrear",
 					"Payroll Correction",
@@ -58,14 +56,11 @@ def get_dashboard_for_employee(data):
 				"items": ["Training Event", "Training Result", "Training Feedback", "Employee Skill Map"],
 			},
 			{"label": _("Evaluation"), "items": ["Appraisal"]},
-			{"label": _("Contract"), "items": ["Contract"]},
-		]
+			]
 	)
 
 	data["non_standard_fieldnames"].update(
 		{
-			"Bank Account": "party",
-			"Contract": "party_name",
 			"Employee Grievance": "raised_by",
 			"Holiday List Assignment": "assigned_to",
 		}

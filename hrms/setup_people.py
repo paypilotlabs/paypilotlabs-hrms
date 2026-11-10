@@ -15,7 +15,7 @@ def setup_company(args: dict | None = None):
 	currency = (
 		args.get("currency")
 		or frappe.db.get_default("currency")
-		or (country and frappe.db.get_value("Country", country, "currency"))
+		or (country and _country_currency(country))
 		or "USD"
 	)
 	company = frappe.get_doc(
@@ -40,3 +40,9 @@ def setup_company(args: dict | None = None):
 		}
 	).insert(ignore_permissions=True)
 	frappe.db.set_value("Company", company.name, "default_holiday_list", holiday_list.name)
+
+
+def _country_currency(country):
+	from frappe.geo.country_info import get_country_info
+
+	return (get_country_info(country) or {}).get("currency")

@@ -11,7 +11,6 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 		frm.page.clear_indicator();
 		frm.disable_save();
 		frm.trigger("set_primary_action");
-		await frm.trigger("set_payroll_payable_account");
 		frm.trigger("get_employees");
 		hrms.handle_realtime_bulk_action_notification(
 			frm,
@@ -25,7 +24,6 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 	},
 
 	async company(frm) {
-		await frm.trigger("set_payroll_payable_account");
 		frm.trigger("get_employees");
 	},
 
@@ -74,23 +72,6 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 					currency: frm.doc.currency,
 				},
 			};
-		});
-		frm.set_query("payroll_payable_account", function () {
-			const company_currency = erpnext.get_currency(frm.doc.company);
-			return {
-				filters: {
-					company: frm.doc.company,
-					root_type: "Liability",
-					is_group: 0,
-					account_currency: ["in", [frm.doc.currency, company_currency]],
-				},
-			};
-		});
-	},
-
-	set_payroll_payable_account(frm) {
-		frappe.db.get_value("Company", frm.doc.company, "default_payroll_payable_account", (r) => {
-			frm.set_value("payroll_payable_account", r.default_payroll_payable_account);
 		});
 	},
 

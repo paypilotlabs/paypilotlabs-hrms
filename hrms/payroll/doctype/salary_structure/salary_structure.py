@@ -268,27 +268,11 @@ def create_salary_structure_assignment(
 ):
 	assignment = frappe.new_doc("Salary Structure Assignment")
 
-	if not payroll_payable_account:
-		payroll_payable_account = frappe.db.get_value("Company", company, "default_payroll_payable_account")
-		if not payroll_payable_account:
-			frappe.throw(_('Please set "Default Payroll Payable Account" in Company Defaults'))
-
-	payroll_payable_account_currency = frappe.db.get_value(
-		"Account", payroll_payable_account, "account_currency"
-	)
-	company_curency = get_company_currency(company)
-	if payroll_payable_account_currency != currency and payroll_payable_account_currency != company_curency:
-		frappe.throw(
-			_("Invalid Payroll Payable Account. The account currency must be {0} or {1}").format(
-				currency, company_curency
-			)
-		)
 
 	assignment.employee = employee
 	assignment.salary_structure = salary_structure
 	assignment.company = company
 	assignment.currency = currency
-	assignment.payroll_payable_account = payroll_payable_account
 	assignment.from_date = from_date
 	assignment.base = base
 	assignment.variable = variable

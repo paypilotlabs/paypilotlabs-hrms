@@ -169,12 +169,8 @@ def cancel_loan_repayment_entry(doc: "SalarySlip"):
 			repayment_entry.cancel()
 
 
-def get_payroll_payable_account(company, payroll_entry):
-	if payroll_entry:
-		payroll_payable_account = frappe.db.get_value(
-			"Payroll Entry", payroll_entry, "payroll_payable_account"
-		)
-	else:
-		payroll_payable_account = frappe.db.get_value("Company", company, "default_payroll_payable_account")
 
-	return payroll_payable_account
+
+def get_payroll_payable_account(company, payroll_entry):
+	# PayPilotLabs People keeps no ledger accounts; the lending app picks its own account.
+	return None

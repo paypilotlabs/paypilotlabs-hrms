@@ -2615,18 +2615,6 @@ def get_salary_component_data(component):
 	)
 
 
-def get_payroll_payable_account(company, payroll_entry):
-	if payroll_entry:
-		payroll_payable_account = frappe.db.get_value(
-			"Payroll Entry", payroll_entry, "payroll_payable_account", cache=True
-		)
-	else:
-		payroll_payable_account = frappe.db.get_value(
-			"Company", company, "default_payroll_payable_account", cache=True
-		)
-
-	return payroll_payable_account
-
 
 def get_lwp_or_ppl_for_date_range(employee, start_date, end_date):
 	LeaveApplication = frappe.qb.DocType("Leave Application")
