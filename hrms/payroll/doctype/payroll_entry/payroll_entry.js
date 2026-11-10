@@ -3,20 +3,16 @@
 
 var in_progress = false;
 
-frappe.provide("erpnext.accounts.dimensions");
-
 frappe.ui.form.on("Payroll Entry", {
 	onload: function (frm) {
-		frm.ignore_doctypes_on_cancel_all = ["Salary Slip", "Journal Entry"];
+		frm.ignore_doctypes_on_cancel_all = ["Salary Slip"];
 
 		if (!frm.doc.posting_date) {
 			frm.doc.posting_date = frappe.datetime.nowdate();
 		}
 		frm.toggle_reqd(["payroll_frequency"], !frm.doc.salary_slip_based_on_timesheet);
 
-		erpnext.accounts.dimensions.setup_dimension_filters(frm, frm.doctype);
 		frm.events.department_filters(frm);
-		frm.events.payroll_payable_account_filters(frm);
 
 		frappe.realtime.off("completed_overtime_slip_creation");
 		frappe.realtime.on("completed_overtime_slip_creation", function () {
@@ -44,18 +40,6 @@ frappe.ui.form.on("Payroll Entry", {
 			return {
 				filters: {
 					company: frm.doc.company,
-				},
-			};
-		});
-	},
-
-	payroll_payable_account_filters: function (frm) {
-		frm.set_query("payroll_payable_account", function () {
-			return {
-				filters: {
-					company: frm.doc.company,
-					root_type: "Liability",
-					is_group: 0,
 				},
 			};
 		});
@@ -166,7 +150,7 @@ frappe.ui.form.on("Payroll Entry", {
 			frm.doc.salary_slips_submitted ||
 			(frm.doc.__onload && frm.doc.__onload.submitted_ss)
 		) {
-			frm.events.add_bank_entry_button(frm);
+			// salary slips are submitted; nothing left to post
 		} else if (frm.doc.salary_slips_created && frm.doc.status !== "Queued") {
 			frm.add_custom_button(__("Submit Salary Slip"), function () {
 				submit_salary_slip(frm);
@@ -178,34 +162,7 @@ frappe.ui.form.on("Payroll Entry", {
 		}
 	},
 
-	add_bank_entry_button: function (frm) {
-		frm.call("has_bank_entries").then((r) => {
-			if (!r.message.has_bank_entries) {
-				frm.add_custom_button(__("Make Bank Entry"), function () {
-					make_bank_entry(frm);
-				}).addClass("btn-primary");
-			} else if (!r.message.has_bank_entries_for_withheld_salaries) {
-				frm.add_custom_button(__("Release Withheld Salaries"), function () {
-					make_bank_entry(frm, (for_withheld_salaries = 1));
-				}).addClass("btn-primary");
-			}
-		});
-	},
-
 	setup: function (frm) {
-		frm.add_fetch("company", "cost_center", "cost_center");
-
-		frm.set_query("payment_account", function () {
-			var account_types = ["Bank", "Cash"];
-			return {
-				filters: {
-					account_type: ["in", account_types],
-					is_group: 0,
-					company: frm.doc.company,
-				},
-			};
-		});
-
 		frm.set_query("employee", "employees", () => {
 			let error_fields = [];
 			let mandatory_fields = ["company", "payroll_frequency", "start_date", "end_date"];
@@ -242,7 +199,6 @@ frappe.ui.form.on("Payroll Entry", {
 			"start_date",
 			"end_date",
 			"payroll_frequency",
-			"payroll_payable_account",
 			"currency",
 			"department",
 			"branch",
@@ -274,7 +230,6 @@ frappe.ui.form.on("Payroll Entry", {
 
 	company: function (frm) {
 		frm.events.clear_employee_table(frm);
-		erpnext.accounts.dimensions.update_dimension(frm, frm.doctype);
 		frm.trigger("set_payable_account_and_currency");
 	},
 
@@ -282,14 +237,6 @@ frappe.ui.form.on("Payroll Entry", {
 		frappe.db.get_value("Company", { name: frm.doc.company }, "default_currency", (r) => {
 			frm.set_value("currency", r.default_currency);
 		});
-		frappe.db.get_value(
-			"Company",
-			{ name: frm.doc.company },
-			"default_payroll_payable_account",
-			(r) => {
-				frm.set_value("payroll_payable_account", r.default_payroll_payable_account);
-			},
-		);
 	},
 
 	currency: function (frm) {
@@ -419,7 +366,7 @@ frappe.ui.form.on("Payroll Entry", {
 const submit_salary_slip = function (frm) {
 	frappe.confirm(
 		__(
-			"This will submit Salary Slips and create accrual Journal Entry. Do you want to proceed?",
+			"This will submit Salary Slips. Do you want to proceed?",
 		),
 		function () {
 			frappe.call({
@@ -427,7 +374,7 @@ const submit_salary_slip = function (frm) {
 				args: {},
 				doc: frm.doc,
 				freeze: true,
-				freeze_message: __("Submitting Salary Slips and creating Journal Entry..."),
+				freeze_message: __("Submitting Salary Slips..."),
 			});
 		},
 		function () {
@@ -436,31 +383,6 @@ const submit_salary_slip = function (frm) {
 			}
 		},
 	);
-};
-
-let make_bank_entry = function (frm, for_withheld_salaries = 0) {
-	const doc = frm.doc;
-	if (doc.payment_account) {
-		return frappe.call({
-			method: "run_doc_method",
-			args: {
-				method: "make_bank_entry",
-				dt: "Payroll Entry",
-				dn: frm.doc.name,
-				args: { for_withheld_salaries: for_withheld_salaries },
-			},
-			callback: function () {
-				frappe.set_route("List", "Journal Entry", {
-					"Journal Entry Account.reference_name": frm.doc.name,
-				});
-			},
-			freeze: true,
-			freeze_message: __("Creating Payment Entries......"),
-		});
-	} else {
-		frappe.msgprint(__("Payment Account is mandatory"));
-		frm.scroll_to_field("payment_account");
-	}
 };
 
 let render_employee_attendance = function (frm, data) {
