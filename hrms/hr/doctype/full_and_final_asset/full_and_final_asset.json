@@ -5,29 +5,17 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "reference",
   "asset_name",
   "date",
   "actual_cost",
   "cost",
   "column_break_xezj",
-  "account",
   "action",
   "status",
   "section_break_hudu",
   "description"
  ],
  "fields": [
-  {
-   "columns": 2,
-   "fieldname": "reference",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Reference",
-   "options": "Asset Movement",
-   "read_only": 1,
-   "reqd": 1
-  },
   {
    "columns": 1,
    "fieldname": "status",
@@ -83,14 +71,6 @@
    "mandatory_depends_on": "eval:doc.action == \"Recover Cost\"",
    "non_negative": 1,
    "read_only_depends_on": "eval:doc.action != \"Recover Cost\""
-  },
-  {
-   "columns": 1,
-   "fieldname": "account",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Account",
-   "options": "Account"
   },
   {
    "fieldname": "actual_cost",

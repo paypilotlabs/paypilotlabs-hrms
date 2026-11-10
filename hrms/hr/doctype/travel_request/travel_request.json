@@ -32,7 +32,6 @@
   "costing_details",
   "costings",
   "accounting_dimensions_section",
-  "cost_center",
   "dimension_col_break",
   "event_details",
   "name_of_organizer",
@@ -163,12 +162,6 @@
    "fieldname": "costing_details",
    "fieldtype": "Section Break",
    "label": "Costing Details"
-  },
-  {
-   "fieldname": "cost_center",
-   "fieldtype": "Link",
-   "label": "Cost Center",
-   "options": "Cost Center"
   },
   {
    "fieldname": "costings",

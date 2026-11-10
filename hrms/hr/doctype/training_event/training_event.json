@@ -21,7 +21,6 @@
   "trainer_name",
   "trainer_email",
   "column_break_7",
-  "supplier",
   "contact_number",
   "section_break_9",
   "course",
@@ -112,12 +111,6 @@
   {
    "fieldname": "column_break_7",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "supplier",
-   "fieldtype": "Link",
-   "label": "Supplier",
-   "options": "Supplier"
   },
   {
    "fieldname": "contact_number",

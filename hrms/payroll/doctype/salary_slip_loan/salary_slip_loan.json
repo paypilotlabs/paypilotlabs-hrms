@@ -5,10 +5,6 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "loan",
-  "loan_product",
-  "loan_account",
-  "interest_income_account",
   "column_break_4",
   "principal_amount",
   "interest_amount",
@@ -16,30 +12,6 @@
   "loan_repayment_entry"
  ],
  "fields": [
-  {
-   "fieldname": "loan",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Loan",
-   "options": "Loan",
-   "read_only": 1,
-   "reqd": 1
-  },
-  {
-   "fieldname": "loan_account",
-   "fieldtype": "Link",
-   "label": "Loan Account",
-   "options": "Account",
-   "read_only": 1
-  },
-  {
-   "fieldname": "interest_income_account",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Interest Income Account",
-   "options": "Account",
-   "read_only": 1
-  },
   {
    "fieldname": "column_break_4",
    "fieldtype": "Column Break"
@@ -73,14 +45,6 @@
    "label": "Loan Repayment Entry",
    "no_copy": 1,
    "options": "Loan Repayment",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "loan.loan_product",
-   "fieldname": "loan_product",
-   "fieldtype": "Link",
-   "label": "Loan Product",
-   "options": "Loan Product",
    "read_only": 1
   }
  ],

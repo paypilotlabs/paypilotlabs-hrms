@@ -56,6 +56,29 @@ def before_app_uninstall(app_name):
 
 
 def get_custom_fields():
+	"""Custom fields People adds, minus any on or linking to doctypes that are not installed."""
+	return _filter_installed(_get_all_custom_fields())
+
+
+def _filter_installed(custom_fields: dict) -> dict:
+	link_types = ("Link", "Table", "Table MultiSelect")
+	out = {}
+	for doctypes, fields in custom_fields.items():
+		names = doctypes if isinstance(doctypes, tuple) else (doctypes,)
+		names = tuple(dt for dt in names if frappe.db.exists("DocType", dt))
+		if not names:
+			continue
+		kept = [
+			f
+			for f in fields
+			if f.get("fieldtype") not in link_types or frappe.db.exists("DocType", f.get("options"))
+		]
+		if kept:
+			out[names if len(names) > 1 else names[0]] = kept
+	return out
+
+
+def _get_all_custom_fields():
 	"""HR specific custom fields that need to be added to the masters in ERPNext"""
 	return {
 		"Company": [
@@ -355,13 +378,6 @@ def make_fixtures():
 		{"doctype": "Expense Claim Type", "name": _("Medical"), "expense_type": _("Medical")},
 		{"doctype": "Expense Claim Type", "name": _("Others"), "expense_type": _("Others")},
 		{"doctype": "Expense Claim Type", "name": _("Travel"), "expense_type": _("Travel")},
-		# vehicle service item
-		{"doctype": "Vehicle Service Item", "service_item": "Brake Oil"},
-		{"doctype": "Vehicle Service Item", "service_item": "Brake Pad"},
-		{"doctype": "Vehicle Service Item", "service_item": "Clutch Plate"},
-		{"doctype": "Vehicle Service Item", "service_item": "Engine Oil"},
-		{"doctype": "Vehicle Service Item", "service_item": "Oil Change"},
-		{"doctype": "Vehicle Service Item", "service_item": "Wheels"},
 		# leave type
 		{
 			"doctype": "Leave Type",
@@ -560,21 +576,6 @@ def create_default_role_profiles():
 
 def get_post_install_patches():
 	return (
-		"erpnext.patches.v13_0.move_tax_slabs_from_payroll_period_to_income_tax_slab",
-		"erpnext.patches.v13_0.move_doctype_reports_and_notification_from_hr_to_payroll",
-		"erpnext.patches.v13_0.move_payroll_setting_separately_from_hr_settings",
-		"erpnext.patches.v13_0.update_start_end_date_for_old_shift_assignment",
-		"erpnext.patches.v13_0.updates_for_multi_currency_payroll",
-		"erpnext.patches.v13_0.update_reason_for_resignation_in_employee",
-		"erpnext.patches.v13_0.set_company_in_leave_ledger_entry",
-		"erpnext.patches.v13_0.rename_stop_to_send_birthday_reminders",
-		"erpnext.patches.v13_0.set_training_event_attendance",
-		"erpnext.patches.v14_0.set_payroll_cost_centers",
-		"erpnext.patches.v13_0.update_employee_advance_status",
-		"erpnext.patches.v13_0.update_expense_claim_status_for_paid_advances",
-		"erpnext.patches.v14_0.delete_employee_transfer_property_doctype",
-		"erpnext.patches.v13_0.set_payroll_entry_status",
-		# HRMS
 		"create_country_fixtures",
 		"update_allocate_on_in_leave_type",
 		"update_performance_module_changes",
@@ -902,6 +903,8 @@ def add_default_hr_permissions():
 
 
 def setup_repost_defaults():
+	if not frappe.db.exists("DocType", "Accounts Settings"):
+		return  # People runs without Books: no ledger to repost
 	accounts_settings = frappe.get_doc("Accounts Settings")
 	for x in frappe.get_hooks("repost_allowed_doctypes"):
 		accounts_settings.append("repost_allowed_types", {"document_type": x})

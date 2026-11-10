@@ -4,8 +4,8 @@
  "autoname": "HR-PRUN-.YYYY.-.#####",
  "creation": "2017-10-23 15:22:29.291323",
  "doctype": "DocType",
- "documentation": "https://docs.frappe.io/hr/payroll-entry",
  "document_type": "Other",
+ "documentation": "https://docs.frappe.io/hr/payroll-entry",
  "engine": "InnoDB",
  "field_order": [
   "select_payroll_period",
@@ -14,7 +14,6 @@
   "column_break_5",
   "currency",
   "exchange_rate",
-  "payroll_payable_account",
   "status",
   "section_break_cypo",
   "salary_slip_based_on_timesheet",
@@ -38,13 +37,9 @@
   "attendance_detail_html",
   "accounting_dimensions_tab",
   "accounting_dimensions_section",
-  "cost_center",
   "dimension_col_break",
-  "project",
   "account",
-  "payment_account",
   "column_break_35",
-  "bank_account",
   "salary_slips_created",
   "salary_slips_submitted",
   "overtime_step",
@@ -148,32 +143,9 @@
    "label": "Deduct Tax For Unsubmitted Tax Exemption Proof"
   },
   {
-   "default": ":Company",
-   "fieldname": "cost_center",
-   "fieldtype": "Link",
-   "label": "Cost Center",
-   "options": "Cost Center",
-   "reqd": 1
-  },
-  {
-   "fieldname": "project",
-   "fieldtype": "Link",
-   "label": "Project",
-   "options": "Project"
-  },
-  {
    "fieldname": "account",
    "fieldtype": "Section Break",
    "label": "Payment Entry"
-  },
-  {
-   "allow_on_submit": 1,
-   "description": "Select Payment Account to make Bank Entry",
-   "fetch_from": "bank_account.account",
-   "fieldname": "payment_account",
-   "fieldtype": "Link",
-   "label": "Payment Account",
-   "options": "Account"
   },
   {
    "fieldname": "amended_from",
@@ -212,12 +184,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "bank_account",
-   "fieldtype": "Link",
-   "label": "Bank Account",
-   "options": "Bank Account"
-  },
-  {
    "depends_on": "company",
    "fieldname": "currency",
    "fieldtype": "Link",
@@ -232,14 +198,6 @@
    "fieldtype": "Float",
    "label": "Exchange Rate",
    "precision": "9",
-   "reqd": 1
-  },
-  {
-   "depends_on": "company",
-   "fieldname": "payroll_payable_account",
-   "fieldtype": "Link",
-   "label": "Payroll Payable Account",
-   "options": "Account",
    "reqd": 1
   },
   {

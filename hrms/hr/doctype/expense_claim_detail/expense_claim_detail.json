@@ -8,7 +8,6 @@
   "expense_date",
   "column_break_2",
   "expense_type",
-  "default_account",
   "description_sb",
   "description",
   "amounts_sb",
@@ -18,9 +17,7 @@
   "sanctioned_amount",
   "base_sanctioned_amount",
   "accounting_dimensions_section",
-  "cost_center",
-  "dimension_col_break",
-  "project"
+  "dimension_col_break"
  ],
  "fields": [
   {
@@ -49,15 +46,6 @@
    "print_width": "150px",
    "reqd": 1,
    "width": "150px"
-  },
-  {
-   "depends_on": "expense_type",
-   "fieldname": "default_account",
-   "fieldtype": "Link",
-   "hidden": 1,
-   "label": "Default Account",
-   "options": "Account",
-   "read_only": 1
   },
   {
    "fieldname": "description",
@@ -100,13 +88,6 @@
    "width": "150px"
   },
   {
-   "allow_on_submit": 1,
-   "fieldname": "cost_center",
-   "fieldtype": "Link",
-   "label": "Cost Center",
-   "options": "Cost Center"
-  },
-  {
    "fieldname": "accounting_dimensions_section",
    "fieldtype": "Section Break",
    "label": "Accounting Dimensions"
@@ -114,13 +95,6 @@
   {
    "fieldname": "dimension_col_break",
    "fieldtype": "Column Break"
-  },
-  {
-   "allow_on_submit": 1,
-   "fieldname": "project",
-   "fieldtype": "Link",
-   "label": "Project",
-   "options": "Project"
   },
   {
    "fieldname": "description_sb",

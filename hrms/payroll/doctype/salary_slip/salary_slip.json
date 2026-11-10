@@ -3,8 +3,8 @@
  "allow_import": 1,
  "creation": "2013-01-10 16:34:15",
  "doctype": "DocType",
- "documentation": "https://docs.frappe.io/hr/salary-slip",
  "document_type": "Setup",
+ "documentation": "https://docs.frappe.io/hr/salary-slip",
  "engine": "InnoDB",
  "field_order": [
   "employee_and_payroll_tab",
@@ -99,7 +99,6 @@
   "future_income_tax_deductions",
   "total_income_tax",
   "section_break_75",
-  "journal_entry",
   "amended_from",
   "column_break_ieob",
   "bank_name",
@@ -179,12 +178,6 @@
    "label": "Status",
    "options": "Draft\nSubmitted\nCancelled\nWithheld",
    "read_only": 1
-  },
-  {
-   "fieldname": "journal_entry",
-   "fieldtype": "Link",
-   "label": "Journal Entry",
-   "options": "Journal Entry"
   },
   {
    "fieldname": "payroll_entry",

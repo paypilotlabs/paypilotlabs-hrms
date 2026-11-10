@@ -8,8 +8,7 @@
  "field_order": [
   "from_date",
   "to_date",
-  "is_salary_released",
-  "journal_entry"
+  "is_salary_released"
  ],
  "fields": [
   {
@@ -36,14 +35,6 @@
    "in_list_view": 1,
    "label": "Is Salary Released",
    "no_copy": 1,
-   "read_only": 1
-  },
-  {
-   "fieldname": "journal_entry",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Journal Entry",
-   "options": "Journal Entry",
    "read_only": 1
   }
  ],

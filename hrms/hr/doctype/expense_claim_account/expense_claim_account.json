@@ -5,8 +5,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "company",
-  "default_account"
+  "company"
  ],
  "fields": [
   {
@@ -15,14 +14,6 @@
    "in_list_view": 1,
    "label": "Company",
    "options": "Company"
-  },
-  {
-   "fieldname": "default_account",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Default Account",
-   "options": "Account",
-   "reqd": 1
   }
  ],
  "istable": 1,

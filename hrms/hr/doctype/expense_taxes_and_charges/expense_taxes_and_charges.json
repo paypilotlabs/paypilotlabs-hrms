@@ -7,7 +7,6 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "account_head",
   "rate",
   "tax_amount",
   "base_tax_amount",
@@ -18,36 +17,12 @@
   "description",
   "column_break_8",
   "accounting_dimensions_section",
-  "cost_center",
-  "dimension_col_break",
-  "project"
+  "dimension_col_break"
  ],
  "fields": [
   {
    "fieldname": "col_break1",
    "fieldtype": "Column Break"
-  },
-  {
-   "allow_on_submit": 1,
-   "columns": 2,
-   "fieldname": "account_head",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Account Head",
-   "oldfieldname": "account_head",
-   "oldfieldtype": "Link",
-   "options": "Account",
-   "reqd": 1
-  },
-  {
-   "allow_on_submit": 1,
-   "default": ":Company",
-   "fieldname": "cost_center",
-   "fieldtype": "Link",
-   "label": "Cost Center",
-   "oldfieldname": "cost_center",
-   "oldfieldtype": "Link",
-   "options": "Cost Center"
   },
   {
    "fieldname": "description",
@@ -98,13 +73,6 @@
   {
    "fieldname": "dimension_col_break",
    "fieldtype": "Column Break"
-  },
-  {
-   "allow_on_submit": 1,
-   "fieldname": "project",
-   "fieldtype": "Link",
-   "label": "Project",
-   "options": "Project"
   },
   {
    "fieldname": "description_sb",

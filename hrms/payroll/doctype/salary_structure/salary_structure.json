@@ -5,8 +5,8 @@
  "autoname": "Prompt",
  "creation": "2013-03-07 18:50:29",
  "doctype": "DocType",
- "documentation": "https://docs.frappe.io/hr/salary-structure",
  "document_type": "Document",
+ "documentation": "https://docs.frappe.io/hr/salary-structure",
  "engine": "InnoDB",
  "field_order": [
   "company",
@@ -37,9 +37,7 @@
   "column_break2",
   "net_pay",
   "account",
-  "mode_of_payment",
-  "column_break_28",
-  "payment_account"
+  "column_break_28"
  ],
  "fields": [
   {
@@ -213,20 +211,8 @@
    "label": "Account"
   },
   {
-   "fieldname": "mode_of_payment",
-   "fieldtype": "Link",
-   "label": "Mode of Payment",
-   "options": "Mode of Payment"
-  },
-  {
    "fieldname": "column_break_28",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "payment_account",
-   "fieldtype": "Link",
-   "label": "Payment Account",
-   "options": "Account"
   },
   {
    "fieldname": "amended_from",

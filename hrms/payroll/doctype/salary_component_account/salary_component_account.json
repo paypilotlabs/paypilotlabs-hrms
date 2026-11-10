@@ -5,9 +5,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "company",
-  "account",
-  "liability_account"
+  "company"
  ],
  "fields": [
   {
@@ -16,23 +14,6 @@
    "in_list_view": 1,
    "label": "Company",
    "options": "Company"
-  },
-  {
-   "description": "Default Bank / Cash account will be automatically updated in Salary Journal Entry when this mode is selected.",
-   "fieldname": "account",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Account",
-   "options": "Account"
-  },
-  {
-   "depends_on": "eval:parent.type == \"Employer Contribution\"",
-   "description": "Liability account credited for employer contributions. Applicable only for Employer Contribution components, where Account is debited as the expense.",
-   "fieldname": "liability_account",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Liability Account",
-   "options": "Account"
   }
  ],
  "istable": 1,

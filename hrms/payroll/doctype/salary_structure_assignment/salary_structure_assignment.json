@@ -19,7 +19,6 @@
   "income_tax_slab",
   "column_break_11",
   "company",
-  "payroll_payable_account",
   "currency",
   "section_break_7",
   "base",
@@ -171,13 +170,6 @@
    "print_hide": 1,
    "read_only": 1,
    "reqd": 1
-  },
-  {
-   "depends_on": "employee",
-   "fieldname": "payroll_payable_account",
-   "fieldtype": "Link",
-   "label": "Payroll Payable Account",
-   "options": "Account"
   },
   {
    "collapsible": 1,

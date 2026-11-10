@@ -8,7 +8,6 @@
   "component",
   "reference_document_type",
   "reference_document",
-  "account",
   "paid_via_salary_slip",
   "column_break_4",
   "amount",
@@ -52,14 +51,6 @@
    "in_list_view": 1,
    "label": "Component",
    "reqd": 1
-  },
-  {
-   "columns": 1,
-   "fieldname": "account",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Account",
-   "options": "Account"
   },
   {
    "columns": 2,

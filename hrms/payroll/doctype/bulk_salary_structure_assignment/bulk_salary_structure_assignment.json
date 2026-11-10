@@ -12,7 +12,6 @@
   "income_tax_slab",
   "column_break_rsep",
   "company",
-  "payroll_payable_account",
   "currency",
   "quick_filters_section",
   "branch",
@@ -57,13 +56,6 @@
   {
    "fieldname": "column_break_rsep",
    "fieldtype": "Column Break"
-  },
-  {
-   "fetch_from": ".default_payroll_payable_account",
-   "fieldname": "payroll_payable_account",
-   "fieldtype": "Link",
-   "label": "Payroll Payable Account",
-   "options": "Account"
   },
   {
    "fieldname": "branch",

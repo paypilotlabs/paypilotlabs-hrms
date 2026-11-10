@@ -25,11 +25,7 @@
   "paid_amount",
   "column_break_13",
   "payroll_date",
-  "salary_component",
-  "cost_center",
-  "mode_of_payment",
-  "expense_account",
-  "payable_account"
+  "salary_component"
  ],
  "fields": [
   {
@@ -80,22 +76,6 @@
    "label": "Status",
    "options": "Draft\nUnpaid\nPaid\nSubmitted\nCancelled",
    "read_only": 1
-  },
-  {
-   "depends_on": "eval: !doc.pay_via_salary_slip",
-   "fieldname": "expense_account",
-   "fieldtype": "Link",
-   "label": "Expense Account",
-   "mandatory_depends_on": "eval: !doc.pay_via_salary_slip",
-   "options": "Account"
-  },
-  {
-   "depends_on": "eval: !doc.pay_via_salary_slip",
-   "fieldname": "mode_of_payment",
-   "fieldtype": "Link",
-   "label": "Mode of Payment",
-   "mandatory_depends_on": "eval: !doc.pay_via_salary_slip",
-   "options": "Mode of Payment"
   },
   {
    "fieldname": "gratuity_rule",
@@ -152,20 +132,6 @@
    "label": "Paid Amount",
    "no_copy": 1,
    "read_only": 1
-  },
-  {
-   "depends_on": "eval: !doc.pay_via_salary_slip",
-   "fieldname": "payable_account",
-   "fieldtype": "Link",
-   "label": "Payable Account",
-   "mandatory_depends_on": "eval: !doc.pay_via_salary_slip",
-   "options": "Account"
-  },
-  {
-   "fieldname": "cost_center",
-   "fieldtype": "Link",
-   "label": "Cost Center",
-   "options": "Cost Center"
   },
   {
    "default": "1",

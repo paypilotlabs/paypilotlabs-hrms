@@ -20,7 +20,6 @@
   "return_amount",
   "allocated_amount",
   "base_allocated_amount",
-  "advance_account",
   "payment_entry_reference"
  ],
  "fields": [
@@ -83,13 +82,6 @@
    "options": "currency",
    "print_width": "120px",
    "width": "120px"
-  },
-  {
-   "fieldname": "advance_account",
-   "fieldtype": "Link",
-   "hidden": 1,
-   "label": "Advance Account",
-   "options": "Account"
   },
   {
    "fieldname": "column_break_4",
