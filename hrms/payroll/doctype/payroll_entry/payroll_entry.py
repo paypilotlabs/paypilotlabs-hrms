@@ -692,7 +692,7 @@ def get_month_details(year, month):
 	import calendar
 	import datetime
 
-	# fiscal years follow the calendar year in PayPilotLabs People (see hrms.utils.core.get_fiscal_year)
+	# fiscal years follow the calendar year in PayPilotLabs HRMS (see hrms.utils.core.get_fiscal_year)
 	ysd = datetime.date(cint(year), 1, 1) if cint(year) else None
 	if ysd:
 

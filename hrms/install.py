@@ -5,15 +5,15 @@ from hrms.setup import after_install as setup
 
 def after_install():
 	try:
-		print("Setting up PayPilotLabs People...")
+		print("Setting up PayPilotLabs HRMS...")
 		setup()
 
-		click.secho("Thank you for installing PayPilotLabs People!", fg="green")
+		click.secho("Thank you for installing PayPilotLabs HRMS!", fg="green")
 
 	except Exception as e:
 		BUG_REPORT_URL = "https://github.com/frappe/hrms/issues/new"
 		click.secho(
-			"Installation for PayPilotLabs People app failed due to an error."
+			"Installation for PayPilotLabs HRMS app failed due to an error."
 			" Please try re-installing the app or"
 			f" report the issue on {BUG_REPORT_URL} if not resolved.",
 			fg="bright_red",

@@ -29,7 +29,7 @@ class FullandFinalStatement(Document):
 
 	def on_submit(self):
 		process_loan_accrual(self)
-		# PayPilotLabs People has no journal entries: the statement is settled on submit.
+		# PayPilotLabs HRMS has no journal entries: the statement is settled on submit.
 		self.db_set("status", "Paid")
 		self.update_linked_payable_documents()
 
@@ -237,7 +237,7 @@ class FullandFinalStatement(Document):
 
 @frappe.whitelist()
 def get_account_and_amount(ref_doctype: str, ref_document: str, company: str) -> list | None:
-	"""Returns [account, outstanding amount]. People keeps no accounts, so the account is always None."""
+	"""Returns [account, outstanding amount]. HRMS keeps no accounts, so the account is always None."""
 	if not ref_doctype or not ref_document:
 		return None
 

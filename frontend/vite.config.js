@@ -24,8 +24,8 @@ export default defineConfig({
 			},
 			manifest: {
 				display: "standalone",
-				name: "PayPilotLabs People",
-				short_name: "People",
+				name: "PayPilotLabs HRMS",
+				short_name: "HRMS",
 				start_url: "/hrms",
 				scope: "/hrms",
 				id: "/hrms",

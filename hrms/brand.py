@@ -5,8 +5,8 @@ apps-screen tile. Logo files live in hrms/public/images/paypilotlabs/.
 """
 
 BRAND = {
-	"product_name": "PayPilotLabs People",
-	"short_name": "People",
+	"product_name": "PayPilotLabs HRMS",
+	"short_name": "HRMS",
 	"company": "PayPilotLabs",
 	"website": "https://paypilotlabs.com",
 	"support_url": "https://paypilotlabs.com/roadmap/",

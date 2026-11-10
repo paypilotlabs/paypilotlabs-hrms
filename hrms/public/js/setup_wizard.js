@@ -147,7 +147,7 @@ hrms.setup.company_size_modules = {
 	"1,000+": ["leave_attendance", "payroll", "recruitment", "performance"],
 };
 
-// PayPilotLabs People: without Books there is no organisation slide, so ask for the company here.
+// PayPilotLabs HRMS: without ERP there is no organisation slide, so ask for the company here.
 frappe.setup.on("before_load", function () {
 	if (frappe.setup.slides.some((s) => ["organization", "people_company"].includes(s.name))) return;
 	frappe.setup.add_slide({

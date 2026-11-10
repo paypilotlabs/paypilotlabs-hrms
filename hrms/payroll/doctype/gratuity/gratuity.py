@@ -51,7 +51,7 @@ class Gratuity(Document):
 		if self.pay_via_salary_slip:
 			self.create_additional_salary()
 		else:
-			# paid outside PayPilotLabs People: record it as paid
+			# paid outside PayPilotLabs HRMS: record it as paid
 			self.db_set("paid_amount", self.amount)
 			self.set_status(update=True)
 

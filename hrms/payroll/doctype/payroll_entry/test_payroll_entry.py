@@ -1,4 +1,4 @@
-# Test cases that covered ledger posting were removed in PayPilotLabs People; helpers are kept for other tests.
+# Test cases that covered ledger posting were removed in PayPilotLabs HRMS; helpers are kept for other tests.
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 

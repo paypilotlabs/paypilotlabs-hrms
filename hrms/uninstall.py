@@ -5,17 +5,17 @@ from hrms.setup import before_uninstall as remove_custom_fields
 
 def before_uninstall():
 	try:
-		print("Removing customizations created by the PayPilotLabs People app...")
+		print("Removing customizations created by the PayPilotLabs HRMS app...")
 		remove_custom_fields()
 
 	except Exception as e:
 		BUG_REPORT_URL = "https://github.com/frappe/hrms/issues/new"
 		click.secho(
-			"Removing Customizations for PayPilotLabs People failed due to an error."
+			"Removing Customizations for PayPilotLabs HRMS failed due to an error."
 			" Please try again or"
 			f" report the issue on {BUG_REPORT_URL} if not resolved.",
 			fg="bright_red",
 		)
 		raise e
 
-	click.secho("PayPilotLabs People app customizations have been removed successfully...", fg="green")
+	click.secho("PayPilotLabs HRMS app customizations have been removed successfully...", fg="green")

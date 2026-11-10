@@ -699,7 +699,7 @@ def get_currency_symbols() -> dict:
 @frappe.whitelist()
 def get_company_cost_center_and_expense_account(company: str) -> dict:
 	frappe.has_permission("Company", "read", company, throw=True)
-	# PayPilotLabs People keeps no cost centers or ledger accounts
+	# PayPilotLabs HRMS keeps no cost centers or ledger accounts
 	return frappe._dict()
 
 

@@ -45,7 +45,7 @@ class LeaveEncashment(Document):
 			self.db_set("leave_allocation", self.get_leave_allocation().get("name"))
 
 		if self.pay_via_payment_entry:
-			# paid outside PayPilotLabs People: record it as paid
+			# paid outside PayPilotLabs HRMS: record it as paid
 			self.db_set("paid_amount", self.encashment_amount)
 			self.set_status(update=True)
 		else:

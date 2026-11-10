@@ -172,5 +172,5 @@ def cancel_loan_repayment_entry(doc: "SalarySlip"):
 
 
 def get_payroll_payable_account(company, payroll_entry):
-	# PayPilotLabs People keeps no ledger accounts; the lending app picks its own account.
+	# PayPilotLabs HRMS keeps no ledger accounts; the lending app picks its own account.
 	return None

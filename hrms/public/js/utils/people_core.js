@@ -1,5 +1,5 @@
-// PayPilotLabs People: the small set of client helpers People's screens use.
-// When Books (ERPNext) is installed its own helpers win; otherwise these stand in.
+// PayPilotLabs HRMS: the small set of client helpers HRMS screens use.
+// When ERPNext is installed its own helpers win; otherwise these stand in.
 window.erpnext = window.erpnext || {};
 (function (e) {
 	e.get_currency =
@@ -51,7 +51,7 @@ window.erpnext = window.erpnext || {};
 	u.get_fiscal_year =
 		u.get_fiscal_year ||
 		function (date, with_dates) {
-			// fiscal years follow the calendar year in PayPilotLabs People
+			// fiscal years follow the calendar year in PayPilotLabs HRMS
 			const year = String(frappe.datetime.str_to_obj(date || frappe.datetime.get_today()).getFullYear());
 			return with_dates ? [year, `${year}-01-01`, `${year}-12-31`] : year;
 		};

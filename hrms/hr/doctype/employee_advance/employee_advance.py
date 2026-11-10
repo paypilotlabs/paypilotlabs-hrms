@@ -25,7 +25,7 @@ class EmployeeAdvance(Document):
 
 
 	def before_submit(self):
-		# PayPilotLabs People has no payment ledger: an advance is treated as paid out when submitted.
+		# PayPilotLabs HRMS has no payment ledger: an advance is treated as paid out when submitted.
 		self.paid_amount = flt(self.advance_amount)
 		self.base_paid_amount = flt(self.advance_amount)
 		self.set_status()

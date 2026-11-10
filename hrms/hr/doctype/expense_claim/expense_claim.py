@@ -304,7 +304,7 @@ class ExpenseClaim(Document, PWANotificationsMixin):
 
 
 def get_total_reimbursed_amount(doc):
-	# PayPilotLabs People has no payment ledger: a claim is reimbursed when it is marked as paid.
+	# PayPilotLabs HRMS has no payment ledger: a claim is reimbursed when it is marked as paid.
 	return flt(doc.grand_total) if doc.is_paid else 0
 
 

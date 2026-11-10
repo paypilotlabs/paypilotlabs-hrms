@@ -56,7 +56,7 @@ def before_app_uninstall(app_name):
 
 
 def get_custom_fields():
-	"""Custom fields People adds, minus any on or linking to doctypes that are not installed."""
+	"""Custom fields HRMS adds, minus any on or linking to doctypes that are not installed."""
 	return _filter_installed(_get_all_custom_fields())
 
 
@@ -904,7 +904,7 @@ def add_default_hr_permissions():
 
 def setup_repost_defaults():
 	if not frappe.db.exists("DocType", "Accounts Settings"):
-		return  # People runs without Books: no ledger to repost
+		return  # HRMS runs without ERP: no ledger to repost
 	accounts_settings = frappe.get_doc("Accounts Settings")
 	for x in frappe.get_hooks("repost_allowed_doctypes"):
 		accounts_settings.append("repost_allowed_types", {"document_type": x})

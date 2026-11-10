@@ -1,5 +1,5 @@
 # Copyright (c) 2026, PayPilotLabs. Licensed under GNU GPLv3, see license.txt
-"""People runs without Books (PayPilotLabs Books), so it creates its own Company at setup."""
+"""HRMS runs without PayPilotLabs ERP, so it creates its own Company at setup."""
 
 import frappe
 from frappe.utils import getdate, nowdate

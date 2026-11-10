@@ -1,5 +1,5 @@
 # Copyright (c) 2026, Frappe Technologies Pvt. Ltd. and contributors (originally in ERPNext)
-# Modified by PayPilotLabs: helpers People needs, so it runs without Books (ERPNext).
+# Modified by PayPilotLabs: helpers HRMS needs, so it runs without ERPNext.
 # For license information, please see license.txt
 
 from datetime import timedelta
@@ -45,7 +45,7 @@ def get_company_currency(company):
 
 
 def get_fiscal_year(date=None, company=None, as_dict=False):
-	"""People has no accounting: a fiscal year is the calendar year of `date`."""
+	"""HRMS has no accounting: a fiscal year is the calendar year of `date`."""
 	date = getdate(date)
 	start, end = getdate(f"{date.year}-01-01"), getdate(f"{date.year}-12-31")
 	if as_dict:

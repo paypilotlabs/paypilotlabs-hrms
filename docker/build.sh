@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build the PayPilotLabs People image with frappe_docker's custom Containerfile (Frappe v16: Python 3.14, Node 24).
+# Build the PayPilotLabs HRMS image with frappe_docker's custom Containerfile (Frappe v16: Python 3.14, Node 24).
 # Needs: docker, git, and a GitHub token with read access to the private paypilotlabs repos.
 #   GITHUB_TOKEN=ghp_xxx ./docker/build.sh
 set -euo pipefail
@@ -13,6 +13,6 @@ docker build \
   --build-arg=PYTHON_VERSION=3.14 \
   --build-arg=NODE_VERSION=24 \
   --build-arg=APPS_JSON_BASE64="$(printf '%s' "$APPS_JSON" | base64 | tr -d '\n')" \
-  --tag="${IMAGE:-paypilotlabs/people}:${TAG:-latest}" \
+  --tag="${IMAGE:-paypilotlabs/hrms}:${TAG:-latest}" \
   --file=.frappe_docker/images/custom/Containerfile \
   .frappe_docker

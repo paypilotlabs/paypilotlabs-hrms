@@ -12,7 +12,7 @@ from hrms.hr.doctype.holiday_list.holiday_list import is_holiday
 
 class EmployeeBoardingController(Document):
 	"""
-	Create one ToDo per activity for the boarding process (PayPilotLabs People has no Projects or Tasks)
+	Create one ToDo per activity for the boarding process (PayPilotLabs HRMS has no Projects or Tasks)
 	and assign it to the people and roles set in the onboarding/separation template.
 	"""
 

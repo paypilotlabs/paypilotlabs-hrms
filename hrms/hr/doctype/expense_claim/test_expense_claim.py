@@ -1,4 +1,4 @@
-# Test cases that covered ledger posting were removed in PayPilotLabs People; helpers are kept for other tests.
+# Test cases that covered ledger posting were removed in PayPilotLabs HRMS; helpers are kept for other tests.
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors and Contributors
 # See license.txt
 
@@ -22,7 +22,7 @@ company_name = "_Test Company 3"
 
 
 def get_payable_account(company):
-	return None  # People keeps no ledger accounts
+	return None  # HRMS keeps no ledger accounts
 
 
 

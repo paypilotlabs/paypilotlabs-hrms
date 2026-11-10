@@ -1,5 +1,5 @@
 # Copyright (c) 2026, Frappe Technologies Pvt. Ltd. and contributors (originally in ERPNext)
-# Modified by PayPilotLabs: the employee search People needs without Books (ERPNext).
+# Modified by PayPilotLabs: the employee search HRMS needs without ERPNext.
 # For license information, please see license.txt
 
 import frappe
