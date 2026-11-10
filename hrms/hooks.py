@@ -1,19 +1,21 @@
 app_name = "hrms"
-app_title = "PayPilotLabs People"
-app_publisher = "Frappe Technologies Pvt. Ltd."
+from hrms.brand import BRAND
+
+app_title = BRAND["product_name"]
+app_publisher = BRAND["company"]
 app_description = "Modern HR and Payroll Software"
-app_email = "contact@frappe.io"
+app_email = BRAND["email"]
 app_license = "GNU General Public License (v3)"
 required_apps = []
 source_link = "http://github.com/frappe/hrms"
-app_logo_url = "/assets/hrms/images/frappe-hr-logo.svg"
+app_logo_url = BRAND["logo"]
 app_home = "/desk/hr-setup"
 
 add_to_apps_screen = [
 	{
 		"name": "hrms",
-		"logo": "/assets/hrms/images/frappe-hr-logo.svg",
-		"title": "PayPilotLabs People",
+		"logo": BRAND["logo"],
+		"title": BRAND["product_name"],
 		"route": app_home,
 		"setup_wizard_text": "Let's build a workplace your team will love.",
 		"has_permission": "hrms.hr.utils.check_app_permission",
