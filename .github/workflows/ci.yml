@@ -41,7 +41,9 @@ jobs:
         with:
           node-version: "22"
       - name: Stub bench config the build reads
-        run: mkdir -p "$GITHUB_WORKSPACE/../../sites" && echo '{}' > "$GITHUB_WORKSPACE/../../sites/common_site_config.json"
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/../../sites"
+          echo '{"socketio_port": 9000, "webserver_port": 8000}' > "$GITHUB_WORKSPACE/../../sites/common_site_config.json"
       - name: Build frontend
         working-directory: frontend
         env:
