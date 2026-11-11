@@ -9,25 +9,6 @@ const PARENTFIELD_BY_COMPONENT_TYPE = {
 
 frappe.ui.form.on("Salary Component", {
 	setup: function (frm) {
-		frm.set_query("account", "accounts", function (doc, cdt, cdn) {
-			var d = locals[cdt][cdn];
-			return {
-				filters: {
-					is_group: 0,
-					company: d.company,
-				},
-			};
-		});
-		frm.set_query("liability_account", "accounts", function (doc, cdt, cdn) {
-			var d = locals[cdt][cdn];
-			return {
-				filters: {
-					is_group: 0,
-					company: d.company,
-					root_type: "Liability",
-				},
-			};
-		});
 		frm.set_query("earning_component_group", function () {
 			return {
 				filters: {
