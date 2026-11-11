@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Build the PayPilotLabs HRMS image with frappe_docker's custom Containerfile (Frappe v16: Python 3.14, Node 24).
 # Needs: docker, git, and a GitHub token with read access to the private paypilotlabs repos.
+# The token is stored in the image build args: use a short-lived read-only token and never push the image.
 #   GITHUB_TOKEN=ghp_xxx ./docker/build.sh
 set -euo pipefail
 cd "$(dirname "$0")/.."
