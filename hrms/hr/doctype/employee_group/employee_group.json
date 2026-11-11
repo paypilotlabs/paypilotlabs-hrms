@@ -3,7 +3,6 @@
  "autoname": "field:employee_group_name",
  "creation": "2018-11-19 12:33:31.351364",
  "doctype": "DocType",
- "documentation": "https://docs.frappe.io/erpnext/user/manual/en/employee-group",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -34,7 +33,7 @@
  ],
  "icon": "users",
  "links": [],
- "modified": "2026-03-26 17:22:45.737955",
+ "modified": "2026-11-11 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Group",

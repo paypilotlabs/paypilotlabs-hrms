@@ -7,7 +7,6 @@
  "description": "The holidays and weekly offs of a company or employee.",
  "doctype": "DocType",
  "document_type": "Setup",
- "documentation": "https://docs.frappe.io/erpnext/user/manual/en/holiday-list",
  "engine": "InnoDB",
  "field_order": [
   "holiday_list_name",
@@ -156,7 +155,7 @@
  "icon": "calendar-off",
  "idx": 1,
  "links": [],
- "modified": "2026-09-16 11:42:07.000000",
+ "modified": "2026-11-11 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Holiday List",

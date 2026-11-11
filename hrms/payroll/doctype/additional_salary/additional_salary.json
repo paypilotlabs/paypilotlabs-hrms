@@ -4,7 +4,6 @@
  "autoname": "naming_series:",
  "creation": "2018-05-10 12:04:08.396461",
  "doctype": "DocType",
- "documentation": "https://docs.frappe.io/hr/additional-salary",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -205,7 +204,7 @@
  "icon": "circle-plus",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-11-11 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Additional Salary",

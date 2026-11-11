@@ -5,7 +5,6 @@
  "creation": "2017-10-23 15:22:29.291323",
  "doctype": "DocType",
  "document_type": "Other",
- "documentation": "https://docs.frappe.io/hr/payroll-entry",
  "engine": "InnoDB",
  "field_order": [
   "select_payroll_period",

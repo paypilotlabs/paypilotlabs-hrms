@@ -6,7 +6,6 @@
  "creation": "2013-03-07 18:50:29",
  "doctype": "DocType",
  "document_type": "Document",
- "documentation": "https://docs.frappe.io/hr/salary-structure",
  "engine": "InnoDB",
  "field_order": [
   "company",

@@ -7,7 +7,6 @@
  "description": "A job title, like manager or accountant.",
  "doctype": "DocType",
  "document_type": "Setup",
- "documentation": "https://docs.frappe.io/erpnext/user/manual/en/designation",
  "engine": "InnoDB",
  "field_order": [
   "designation_name",
@@ -33,7 +32,7 @@
  "icon": "id-card",
  "idx": 1,
  "links": [],
- "modified": "2026-04-14 18:19:34.405635",
+ "modified": "2026-11-11 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Designation",
