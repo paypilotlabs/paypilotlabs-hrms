@@ -10,7 +10,7 @@
     "copy-html-entry": "cp ../hrms/public/roster/index.html ../hrms/www/roster.html"
   },
   "dependencies": {
-    "@vitejs/plugin-vue": "^4.4.0",
+    "@vitejs/plugin-vue": "^6.0.10",
     "autoprefixer": "^10.4.19",
     "dayjs": "^1.11.11",
     "feather-icons": "^4.29.1",
