@@ -9,7 +9,7 @@ By [PayPilotLabs](https://paypilotlabs.com). Support and requests: https://paypi
 PayPilotLabs HRMS runs as a Frappe v16 site in Docker: MariaDB 11.8, Redis, and an image holding frappe + hrms.
 
 1. Push this repo and its companions (`paypilotlabs-framework`) to `github.com/paypilotlabs` (private is fine).
-2. Build the image: `GITHUB_TOKEN=<token with read access> ./docker/build.sh`
+2. Build the image: `./docker/build.sh` (while the repos are private: `GITHUB_TOKEN=<token with read access> ./docker/build.sh`; the token is then stored in the image history, so never push that image)
    The token ends up in the image's build arguments (`docker history` shows it), so use a short-lived, read-only token and never push this image to a registry.
 3. Start it: `docker compose -f docker/docker-compose.yml up -d`
 4. Watch the first-run setup: `docker compose -f docker/docker-compose.yml logs -f create-site` (wait for it to exit 0).
