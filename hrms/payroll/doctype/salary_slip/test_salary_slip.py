@@ -3170,34 +3170,6 @@ def create_recurring_additional_salary(employee, salary_component, amount, from_
 	).submit()
 
 
-def make_salary_structure_for_timesheet(employee, company=None):
-	from hrms.payroll.doctype.salary_structure.test_salary_structure import (
-		create_salary_structure_assignment,
-		make_salary_structure,
-	)
-
-	salary_structure_name = "Timesheet Salary Structure Test"
-	frequency = "Monthly"
-
-	if not frappe.db.exists("Salary Component", "Timesheet Component"):
-		frappe.get_doc({"doctype": "Salary Component", "salary_component": "Timesheet Component"}).insert()
-
-	salary_structure = make_salary_structure(
-		salary_structure_name, frequency, company=company, dont_submit=True
-	)
-	salary_structure.salary_component = "Timesheet Component"
-	salary_structure.salary_slip_based_on_timesheet = 1
-	salary_structure.hour_rate = 50.0
-	salary_structure.save()
-	salary_structure.submit()
-
-	if not frappe.db.get_value("Salary Structure Assignment", {"employee": employee, "docstatus": 1}):
-		frappe.db.set_value("Employee", employee, "date_of_joining", add_months(nowdate(), -5))
-		create_salary_structure_assignment(employee, salary_structure.name, currency="INR")
-
-	return salary_structure
-
-
 def create_employee_other_income(employee, payroll_period, company):
 	other_income = frappe.db.get_value(
 		"Employee Other Income",

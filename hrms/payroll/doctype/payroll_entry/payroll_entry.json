@@ -117,7 +117,9 @@
    "default": "0",
    "fieldname": "salary_slip_based_on_timesheet",
    "fieldtype": "Check",
-   "label": "Salary Slip Based on Timesheet"
+   "hidden": 1,
+   "label": "Salary Slip Based on Timesheet",
+   "read_only": 1
   },
   {
    "fieldname": "select_payroll_period",
@@ -299,7 +301,7 @@
    "link_fieldname": "payroll_entry"
   }
  ],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-11-11 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",

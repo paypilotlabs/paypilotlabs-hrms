@@ -124,16 +124,8 @@ class SalaryStructure(Document):
 		if not self.salary_slip_based_on_timesheet:
 			return
 
-		for component in self.earnings:
-			if component.salary_component == self.salary_component:
-				frappe.msgprint(
-					_(
-						"Row #{0}: Timesheet amount will overwrite the Earning component amount for the Salary Component {1}"
-					).format(self.idx, frappe.bold(self.salary_component)),
-					title=_("Warning"),
-					indicator="orange",
-				)
-				break
+		# HRMS runs without ERP, so there are no Timesheets to pay from
+		frappe.throw(_("Salary slips based on timesheets are not supported."))
 
 	def sanitize_condition_and_formula_fields(self):
 		for table in COMPONENT_PARENTFIELDS:
