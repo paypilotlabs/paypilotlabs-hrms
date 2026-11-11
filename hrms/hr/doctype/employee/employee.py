@@ -11,7 +11,7 @@ from frappe.permissions import (
 from frappe.utils import cint, cstr, getdate, today, validate_email_address
 from frappe.utils.nestedset import NestedSet
 
-from hrms.utils.core import delete_events
+from hrms.utils.core import delete_events, get_default_company
 
 
 class EmployeeUserDisabledError(frappe.ValidationError):
@@ -425,7 +425,7 @@ def get_holiday_list_for_employee(employee, raise_exception=True, as_on=None):
 		holiday_list, company = frappe.get_cached_value("Employee", employee, ["holiday_list", "company"])
 	else:
 		holiday_list = ""
-		company = frappe.db.get_single_value("Global Defaults", "default_company")
+		company = get_default_company()
 
 	if not holiday_list:
 		holiday_list = frappe.get_cached_value("Company", company, "default_holiday_list")

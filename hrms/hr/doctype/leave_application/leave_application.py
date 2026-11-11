@@ -21,7 +21,7 @@ from frappe.utils import (
 	nowdate,
 )
 
-from hrms.utils.core import daterange
+from hrms.utils.core import daterange, get_default_company
 from hrms.hr.doctype.employee.employee import get_holiday_list_for_employee
 
 import hrms
@@ -1418,7 +1418,7 @@ def get_events(start: str, end: str, filters: str | None = None) -> list[dict]:
 		employee, company = employee.name, employee.company
 	else:
 		employee = ""
-		company = frappe.db.get_single_value("Global Defaults", "default_company")
+		company = get_default_company()
 
 	# show department leaves for employee
 	if "Employee" in frappe.get_roles():
