@@ -3,7 +3,7 @@ name = "hrms"
 authors = [
     { name = "Frappe Technologies Pvt Ltd", email = "developers@frappe.io" },
 ]
-description = "Open Source HR & Payroll Software"
+description = "PayPilotLabs HRMS: HR and payroll software"
 requires-python = ">=3.10"
 readme = "README.md"
 dynamic = ["version"]
@@ -63,10 +63,9 @@ section-order = [
 
 
 [project.urls]
-Homepage = "https://frappe.io/hr"
-Repository = "https://github.com/frappe/hrms.git"
-Documentation = "https://docs.frappe.io/hr"
-"Bug Reports" = "https://github.com/frappe/hrms/issues"
+Homepage = "https://paypilotlabs.com"
+Repository = "https://github.com/paypilotlabs/paypilotlabs-hrms.git"
+"Bug Reports" = "https://github.com/paypilotlabs/paypilotlabs-hrms/issues"
 
 [[tool.bench.assets]]
 build_dir = "./frontend"

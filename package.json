@@ -1,16 +1,16 @@
 {
   "private": true,
-  "name": "hrms",
-  "description": "Open Source HR & Payroll System powered by the Frappe Framework",
+  "name": "paypilotlabs-hrms",
+  "description": "PayPilotLabs HRMS: HR and payroll software",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/frappe/hrms.git"
+    "url": "git+https://github.com/paypilotlabs/paypilotlabs-hrms.git"
   },
-  "homepage": "https://frappe.io/hr",
+  "homepage": "https://github.com/paypilotlabs/paypilotlabs-hrms#readme",
   "author": "Frappe Technologies Pvt. Ltd.",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/frappe/hrms/issues"
+    "url": "https://github.com/paypilotlabs/paypilotlabs-hrms/issues"
   },
   "aworkspaces": ["frontend", "roster", "frappe-ui"],
   "scripts": {

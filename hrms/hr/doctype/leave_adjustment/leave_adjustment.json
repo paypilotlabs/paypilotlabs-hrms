@@ -4,7 +4,6 @@
  "autoname": "naming_series:",
  "creation": "2025-04-04 11:19:14.382103",
  "doctype": "DocType",
- "documentation": "https://docs.frappe.io/hr/hr/leave-management/leave-adjustment",
  "engine": "InnoDB",
  "field_order": [
   "section_break_wjxt",
@@ -165,7 +164,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-11-11 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Adjustment",

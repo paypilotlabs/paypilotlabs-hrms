@@ -7,7 +7,7 @@ app_description = "Modern HR and Payroll Software"
 app_email = BRAND["email"]
 app_license = "GNU General Public License (v3)"
 required_apps = []
-source_link = "http://github.com/frappe/hrms"
+source_link = "https://github.com/paypilotlabs/paypilotlabs-hrms"
 app_logo_url = BRAND["logo"]
 app_home = "/desk/hr-setup"
 

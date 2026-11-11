@@ -7,7 +7,6 @@
  "description": "A branch of your company.",
  "doctype": "DocType",
  "document_type": "Setup",
- "documentation": "https://docs.frappe.io/erpnext/user/manual/en/branch",
  "engine": "InnoDB",
  "field_order": [
   "branch"
@@ -27,7 +26,7 @@
  "icon": "store",
  "idx": 1,
  "links": [],
- "modified": "2024-03-27 13:06:42.370664",
+ "modified": "2026-11-11 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Branch",

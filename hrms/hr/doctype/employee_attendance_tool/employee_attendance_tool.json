@@ -3,7 +3,6 @@
  "allow_copy": 1,
  "creation": "2016-01-27 14:59:47.849379",
  "doctype": "DocType",
- "documentation": "https://docs.frappe.io/hr/employee-attendance-tool",
  "engine": "InnoDB",
  "field_order": [
   "date",
@@ -189,7 +188,7 @@
  "is_virtual": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-11-11 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Attendance Tool",
