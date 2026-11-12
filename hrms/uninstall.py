@@ -9,7 +9,7 @@ def before_uninstall():
 		remove_custom_fields()
 
 	except Exception as e:
-		BUG_REPORT_URL = "https://github.com/frappe/hrms/issues/new"
+		BUG_REPORT_URL = "https://paypilotlabs.com/roadmap/"
 		click.secho(
 			"Removing Customizations for PayPilotLabs HRMS failed due to an error."
 			" Please try again or"

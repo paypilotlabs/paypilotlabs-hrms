@@ -13,9 +13,9 @@ def execute():
 
 
 def notify_existing_users():
-	subject = _("WARNING: Loan Management module has been separated from ERPNext.") + "<br>"
+	subject = _("WARNING: Loan Management module has been separated from PayPilotLabs ERP.") + "<br>"
 	subject += _(
-		"If you are using loans in salary slips, please install the {0} app from Frappe Cloud Marketplace or GitHub to continue using loan integration with payroll."
+		"If you are using loans in salary slips, please install the {0} app to continue using loan integration with payroll."
 	).format(frappe.bold("Lending"))
 
 	notification = {

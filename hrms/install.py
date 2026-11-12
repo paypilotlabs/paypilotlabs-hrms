@@ -11,7 +11,7 @@ def after_install():
 		click.secho("Thank you for installing PayPilotLabs HRMS!", fg="green")
 
 	except Exception as e:
-		BUG_REPORT_URL = "https://github.com/frappe/hrms/issues/new"
+		BUG_REPORT_URL = "https://paypilotlabs.com/roadmap/"
 		click.secho(
 			"Installation for PayPilotLabs HRMS app failed due to an error."
 			" Please try re-installing the app or"
