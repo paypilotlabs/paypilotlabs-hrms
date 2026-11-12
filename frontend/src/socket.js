@@ -7,9 +7,11 @@ export function initSocket() {
 	let host = window.location.hostname
 	let siteName = window.site_name
 	let socketio_port = window.frappe?.boot?.socketio_port || 9000
-	let port = window.location.port ? `:${socketio_port}` : ""
-	let protocol = port ? "http" : "https"
-	let url = `${protocol}://${host}${port}/${siteName}`
+	// A production build reaches socket.io through the page's own origin (the web server
+	// proxies /socket.io). Only the Vite dev server runs apart, so it uses socketio_port.
+	let url = import.meta.env.DEV
+		? `http://${host}:${socketio_port}/${siteName}`
+		: `${window.location.origin}/${siteName}`
 	let socket = io(url, {
 		withCredentials: true,
 		reconnectionAttempts: 5,
