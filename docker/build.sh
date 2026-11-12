@@ -9,6 +9,8 @@
 # image local. Override the framework branch with FRAPPE_BRANCH.
 # Secrets are not part of BuildKit's cache key, so CACHE_BUST carries a hash of apps.json; without it
 # a cached bench layer built from another product's apps.json would be reused.
+# OPENSSL_armcap=0 goes into the image (build and runtime): cryptography>=48 bundles an OpenSSL whose
+# CPU probe dies with SIGILL on Apple M4 under Docker's Linux VM. It only skips ARM crypto speedups.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 [ -d .frappe_docker ] || git clone --depth 1 https://github.com/frappe/frappe_docker .frappe_docker
@@ -18,7 +20,10 @@ if [ -n "${GITHUB_TOKEN:-}" ]; then
   echo "warning: GITHUB_TOKEN is stored in this image's build history; keep the image local." >&2
 fi
 APPS_JSON_FILE=$(mktemp)
-trap 'rm -f "$APPS_JSON_FILE"' EXIT
+CONTAINERFILE=$(mktemp)
+trap 'rm -f "$APPS_JSON_FILE" "$CONTAINERFILE"' EXIT
+awk '{print} / AS base$/{print "ENV OPENSSL_armcap=0"}' .frappe_docker/images/custom/Containerfile > "$CONTAINERFILE"
+grep -q '^ENV OPENSSL_armcap=0' "$CONTAINERFILE" || { echo "error: no 'AS base' stage in the Containerfile" >&2; exit 1; }
 sed "s#https://github.com/#https://${AUTH}github.com/#" "${APPS_JSON:-docker/apps.json}" > "$APPS_JSON_FILE"
 DOCKER_BUILDKIT=1 docker build \
   --build-arg=FRAPPE_PATH="https://${AUTH}github.com/paypilotlabs/paypilotlabs-framework.git" \
@@ -28,5 +33,5 @@ DOCKER_BUILDKIT=1 docker build \
   --build-arg=CACHE_BUST="$(shasum -a 256 "$APPS_JSON_FILE" | cut -d' ' -f1)" \
   --secret=id=apps_json,src="$APPS_JSON_FILE" \
   --tag="${IMAGE:-paypilotlabs/hrms}:${TAG:-latest}" \
-  --file=.frappe_docker/images/custom/Containerfile \
+  --file="$CONTAINERFILE" \
   .frappe_docker
