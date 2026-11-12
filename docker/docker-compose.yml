@@ -1,10 +1,10 @@
-# PayPilotLabs HRMS: local stack based on frappe_docker (https://github.com/frappe/frappe_docker, MIT).
+# PayPilotLabs HRMS: local stack based on paypilotlabs-docker (a fork of https://github.com/frappe/frappe_docker, MIT).
 # Build the image first (see README "Run it"), then: docker compose -f docker/docker-compose.yml up -d
 # Development defaults only: change both passwords before using this anywhere real.
-name: pp-hrms
+name: paypilotlabshrms
 
 x-app: &app
-  image: ${IMAGE:-paypilotlabs/hrms}:${TAG:-latest}
+  image: ${IMAGE:-paypilotlabshrms}:${TAG:-latest}
   restart: unless-stopped
   volumes:
     - sites:/home/frappe/frappe-bench/sites
@@ -43,7 +43,7 @@ services:
       - redis-queue-data:/data
 
   configurator:
-    image: ${IMAGE:-paypilotlabs/hrms}:${TAG:-latest}
+    image: ${IMAGE:-paypilotlabshrms}:${TAG:-latest}
     restart: "no"
     entrypoint: ["bash", "-c"]
     command:
@@ -66,7 +66,7 @@ services:
         condition: service_started
 
   create-site:
-    image: ${IMAGE:-paypilotlabs/hrms}:${TAG:-latest}
+    image: ${IMAGE:-paypilotlabshrms}:${TAG:-latest}
     restart: "no"
     entrypoint: ["bash", "-c"]
     command:
