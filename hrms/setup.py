@@ -710,7 +710,8 @@ def create_user_type(user_type, data):
 			}
 		)
 
-	docperms = data.get("doctypes")
+	# Standalone sites have no ERP doctypes such as Timesheet; grant only what exists here.
+	docperms = {dt: perms for dt, perms in data.get("doctypes").items() if frappe.db.exists("DocType", dt)}
 	if doc.role == "Employee Self Service" and "lending" in frappe.get_installed_apps():
 		docperms.update(get_lending_docperms_for_ess())
 
@@ -896,6 +897,8 @@ def add_default_hr_permissions():
 
 	for role, permissions in role_permissions.items():
 		for doctype, ptypes in permissions.items():
+			if not frappe.db.exists("DocType", doctype):
+				continue  # Project and Task come with ERP; standalone sites don't have them
 			add_permission(doctype, role)
 
 			for ptype, value in ptypes.items():
